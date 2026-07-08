@@ -161,10 +161,10 @@ function defaultStartDate() {
 
 async function main() {
   const [route, accommodations, trail, bookingUrls] = await Promise.all([
-    fetch("../data/whw/route.json").then((r) => r.json()),
-    fetch("../data/whw/accommodations.json").then((r) => r.json()),
-    fetch("../data/whw/trail.json").then((r) => r.json()),
-    fetch("../data/whw/booking_urls.json").then((r) => r.json()),
+    fetch("data/whw/route.json").then((r) => r.json()),
+    fetch("data/whw/accommodations.json").then((r) => r.json()),
+    fetch("data/whw/trail.json").then((r) => r.json()),
+    fetch("data/whw/booking_urls.json").then((r) => r.json()),
   ]);
 
   TrailMap.init("map", route);
