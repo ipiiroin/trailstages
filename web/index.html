@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inn-to-Inn Planner — West Highland Way</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="app-header">
+  <h1>West Highland Way — Inn-to-Inn Planner</h1>
+  <p class="subtitle">Milngavie to Fort William, ~154 km. Pick your days, get a stage-by-stage itinerary that always ends at real accommodation.</p>
+</header>
+
+<main class="app-layout">
+  <section class="map-pane">
+    <div id="map"></div>
+  </section>
+
+  <aside class="control-pane">
+    <div class="controls">
+      <label class="control">
+        <span>Days: <strong id="days-value">6</strong></span>
+        <input type="range" id="days-slider" min="4" max="11" value="6" step="1" />
+      </label>
+
+      <label class="control">
+        <span>Direction</span>
+        <select id="direction-select">
+          <option value="forward">Milngavie → Fort William</option>
+          <option value="reverse">Fort William → Milngavie</option>
+        </select>
+      </label>
+
+      <label class="control">
+        <span>Trip start date</span>
+        <input type="date" id="start-date" />
+      </label>
+
+      <label class="control control-checkbox">
+        <input type="checkbox" id="include-camping" />
+        <span>Include campsites (for those carrying a tent)</span>
+      </label>
+    </div>
+
+    <div id="itinerary-error" class="itinerary-error" hidden></div>
+    <div id="itinerary-panel" class="itinerary-panel"></div>
+  </aside>
+</main>
+
+<footer class="app-footer">
+  <p>
+    Route and accommodation data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>,
+    ODbL. Map tiles by <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (CC-BY-SA).
+    Accommodation data is community-sourced and may be incomplete — missing your favourite inn?
+    <a href="https://www.openstreetmap.org" target="_blank" rel="noopener">Add it on osm.org</a>.
+  </p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="planner.js"></script>
+<script src="map.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
