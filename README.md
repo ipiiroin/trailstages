@@ -79,11 +79,17 @@ order (`docs/planner.js`'s `buildAccommodationLink`):
    `data/whw/booking_urls.json` has a curated `booking_url` for that
    accommodation's OSM id, link straight there with `checkin`/`checkout`/
    `group_adults=2` appended.
-2. **Property website** ("Visit website →") — if the mapping confirms the
-   property isn't on Booking.com (`booking_url: null`) but OSM has a
+2. **Property website** ("Visit website →") — if there's no curated
+   `booking_url` (missing, `null`, or `""`) but OSM has a
    `website`/`contact:website` tag, link there instead.
 3. **Area search** ("Search area →") — the same coordinate-anchored
    Booking.com search used everywhere else, as the final fallback.
+
+Direct property links and the area search both route through a CJ
+(Commission Junction) affiliate click-tracking redirect
+(`buildBookingUrl`/`wrapWithCJ` in `docs/planner.js`) since both land on
+Booking.com. Property-website links don't — they're not Booking.com at
+all, so wrapping them would misattribute the click.
 
 `booking_urls.json` is hand-curated, not scraped. `python
 data/build/init_booking_urls.py` pre-populates a row for every roofed
@@ -98,11 +104,12 @@ you've already filled in untouched (merges into the existing file rather
 than overwriting it, so re-running after new accommodation data lands
 never clobbers curation already done).
 
-`booking_url` has three meaningful states, all logged as a gap except the
-middle one: an entirely missing key or `""` (pre-populated, not yet
-filled in) both mean "not curated yet"; `null` means checked and confirmed
-the property has no Booking.com listing (a deliberate answer, not a gap —
-triggers the website fallback instead).
+`booking_url` has two meaningful states: an entirely missing key means
+"not curated yet at all" (logged as a gap, since that's a property that
+was never even added to the mapping file). `null` and `""` are both
+treated as "no direct Booking.com link for this property" — whether
+that's a confirmed absence or just not filled in yet doesn't change the
+resolution, so either falls through to the website check.
 
 ## Known limitations
 
@@ -125,9 +132,9 @@ triggers the website fallback instead).
   for small hamlets (`ss=Kingshouse` silently resolved to an unrelated
   place near Lochearnhead, ~30 km from the real Kingshouse Hotel).
 - **The direct-link mapping is only as complete as the manual curation.**
-  `booking_urls.json` starts empty; until it's filled in via the worklist
-  (see "Booking links" above), every accommodation falls back to its OSM
-  website or an area search.
+  Most roofed accommodation now has a curated `booking_url`, but any
+  property not yet mapped falls back to its OSM website or an area
+  search (see "Booking links" above).
 - **No accounts, no GPX export, no server.**
 - **Elevation is best-effort.** Sampled from the Open-Elevation API at
   roughly one point per 200 m of trail; ascent is a reasonable estimate,

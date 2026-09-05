@@ -351,8 +351,20 @@ function addDaysISO(isoDate, days) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-/** Booking.com location search URL (not a property page). Kept as the one
- * place this URL is built, so adding an affiliate id later is a one-line change.
+// CJ (Commission Junction) click-tracking redirect for the Booking.com
+// affiliate program. Every outbound Booking.com link - property-level or
+// search fallback - must be wrapped in this so clicks are attributed.
+// Deliberately only the clean canonical inner URL plus our own date params
+// go in; no label=/sid=/aid= scraped from a live session.
+const CJ_CLICK_BASE = "https://www.tkqlhce.com/click-101822414-15734870";
+
+function wrapWithCJ(innerUrl) {
+  return `${CJ_CLICK_BASE}?url=${encodeURIComponent(innerUrl)}`;
+}
+
+/** Booking.com location search URL (not a property page), wrapped for CJ
+ * affiliate tracking. Kept as the one place this URL is built, so any future
+ * change to the affiliate wrapping is a one-line change.
  *
  * A bare name-only search (`ss=<name>`) is unreliable for small hamlets:
  * tested live against Booking.com, `ss=Kingshouse` silently resolved to an
@@ -372,7 +384,8 @@ function buildBookingUrl(placeName, checkinISO, checkoutISO, lat, lon) {
     latitude: lat,
     longitude: lon,
   });
-  return `https://www.booking.com/searchresults.html?${params.toString()}`;
+  const inner = `https://www.booking.com/searchresults.html?${params.toString()}`;
+  return wrapWithCJ(inner);
 }
 
 /**
@@ -383,16 +396,14 @@ function buildBookingUrl(placeName, checkinISO, checkoutISO, lat, lon) {
  * future affiliate id is a one-line addition here.
  *
  * `bookingUrls` is the parsed contents of data/whw/booking_urls.json:
- * { "<osm_id>": { booking_url: string|null } }. Three distinct "not a
- * direct link" states, all logged the same way except where noted:
+ * { "<osm_id>": { booking_url: string|null } }. Two distinct "not a direct
+ * link" states:
  *   - key missing entirely: property hasn't been pre-populated at all
  *     (logged - a gap).
- *   - booking_url is "" (the pre-populated placeholder, still unfilled):
- *     curated file has a row for it, just not filled in yet (logged - a
- *     gap, distinct from below because someone still needs to fill it).
- *   - booking_url is null: checked and confirmed the property has no
- *     Booking.com listing (NOT logged - that's an expected, deliberate
- *     answer, not a gap; falls back to the property's own website).
+ *   - booking_url is falsy (`null`, or `""` the pre-populated placeholder):
+ *     no direct Booking.com link on file, whether because it was checked
+ *     and confirmed absent or just not filled in yet - treated the same,
+ *     not logged - falls back to the property's own website when known.
  *
  * @returns {{url: string, linkType: "direct"|"website"|"search"}}
  */
@@ -404,7 +415,7 @@ function buildAccommodationLink(acc, bookingUrls, checkinISO, checkoutISO) {
 
   const entry = acc.osmId ? (bookingUrls || {})[acc.osmId] : undefined;
 
-  if (entry === undefined || entry.booking_url === "") {
+  if (entry === undefined) {
     console.log(`Booking link: "${acc.name}" (${acc.osmId || "no osm id"}) not yet mapped - using area search fallback.`);
     return searchFallback();
   }
@@ -415,7 +426,7 @@ function buildAccommodationLink(acc, bookingUrls, checkinISO, checkoutISO) {
       url.searchParams.set("checkin", checkinISO);
       url.searchParams.set("checkout", checkoutISO);
       url.searchParams.set("group_adults", "2");
-      return { url: url.toString(), linkType: "direct" };
+      return { url: wrapWithCJ(url.toString()), linkType: "direct" };
     } catch {
       console.log(`Booking link: malformed booking_url for "${acc.name}" (${acc.osmId}) - using area search fallback.`);
       return searchFallback();
@@ -521,9 +532,18 @@ function selfTest() {
   });
   check("more days than candidate clusters fails gracefully", !!tooManyDaysForClusters.error);
 
+  const decodeCJ = (url) => {
+    const prefix = `${CJ_CLICK_BASE}?url=`;
+    if (!url.startsWith(prefix)) return null;
+    return decodeURIComponent(url.slice(prefix.length));
+  };
+
   const url = buildBookingUrl("Test Place", "2026-08-01", "2026-08-02", 56.65, -4.84);
-  check("booking url is a booking.com search url", url.startsWith("https://www.booking.com/searchresults.html?"));
-  check("booking url anchors on coordinates via dest_type=latlong", url.includes("dest_type=latlong") && url.includes("latitude=56.65"));
+  check("booking url is wrapped in the CJ click tracker", url.startsWith(`${CJ_CLICK_BASE}?url=`));
+  check("no label=/sid=/aid= leaked into the wrapper", !url.includes("label=") && !url.includes("sid=") && !url.includes("aid="));
+  const innerSearch = decodeCJ(url);
+  check("inner url is a booking.com search url", innerSearch && innerSearch.startsWith("https://www.booking.com/searchresults.html?"));
+  check("inner url anchors on coordinates via dest_type=latlong", innerSearch && innerSearch.includes("dest_type=latlong") && innerSearch.includes("latitude=56.65"));
 
   // Accommodation link tiering: direct mapped URL > confirmed-null's OSM
   // website > confirmed-null-with-no-website / entirely-unmapped search.
@@ -536,8 +556,10 @@ function selfTest() {
   };
   const direct = buildAccommodationLink(mappedAcc, bookingUrls, "2026-08-01", "2026-08-02");
   check("mapped property gets a direct link", direct.linkType === "direct");
-  check("direct link carries checkin/checkout/group_adults", direct.url.includes("checkin=2026-08-01") && direct.url.includes("group_adults=2"));
-  check("direct link is still the booking.com property page", direct.url.startsWith("https://www.booking.com/hotel/gb/mapped-hotel.html"));
+  check("direct link is wrapped in the CJ click tracker", direct.url.startsWith(`${CJ_CLICK_BASE}?url=`));
+  const innerDirect = decodeCJ(direct.url);
+  check("direct link carries checkin/checkout/group_adults", innerDirect && innerDirect.includes("checkin=2026-08-01") && innerDirect.includes("group_adults=2"));
+  check("direct link is still the booking.com property page", innerDirect && innerDirect.startsWith("https://www.booking.com/hotel/gb/mapped-hotel.html"));
 
   const confirmedNullWithWebsite = buildAccommodationLink(
     { name: "No Booking Listing", osmId: "node/2", lat: 56.1, lon: -4.9, website: "https://example-inn.co.uk" },
@@ -545,12 +567,14 @@ function selfTest() {
   );
   check("confirmed-not-on-booking falls back to the property's own website", confirmedNullWithWebsite.linkType === "website");
   check("website link is the property's own url", confirmedNullWithWebsite.url === "https://example-inn.co.uk");
+  check("website link is NOT routed through the Booking.com CJ tracker", !confirmedNullWithWebsite.url.startsWith(CJ_CLICK_BASE));
 
   const confirmedNullNoWebsite = buildAccommodationLink(
     { name: "No Booking No Website", osmId: "node/2", lat: 56.1, lon: -4.9, website: null },
     bookingUrls, "2026-08-01", "2026-08-02"
   );
   check("confirmed-not-on-booking with no website falls back to area search", confirmedNullNoWebsite.linkType === "search");
+  check("area search fallback is also wrapped in the CJ click tracker", confirmedNullNoWebsite.url.startsWith(`${CJ_CLICK_BASE}?url=`));
 
   const unmapped = buildAccommodationLink(
     { name: "Never Curated", osmId: "node/999", lat: 56.1, lon: -4.9, website: null },
@@ -558,13 +582,22 @@ function selfTest() {
   );
   check("entirely unmapped property falls back to area search", unmapped.linkType === "search");
 
-  const placeholderUnfilled = buildAccommodationLink(
+  const placeholderUnfilledWithWebsite = buildAccommodationLink(
     { name: "Not Yet Filled In", osmId: "node/4", lat: 56.1, lon: -4.9, website: "https://example.com" },
     bookingUrls, "2026-08-01", "2026-08-02"
   );
   check(
-    "pre-populated but unfilled booking_url (\"\") is treated as a gap, not confirmed-absent - falls to search even with a website available",
-    placeholderUnfilled.linkType === "search"
+    "pre-populated but unfilled booking_url (\"\") is treated the same as confirmed-absent - falls back to the website when known",
+    placeholderUnfilledWithWebsite.linkType === "website" && placeholderUnfilledWithWebsite.url === "https://example.com"
+  );
+
+  const placeholderUnfilledNoWebsite = buildAccommodationLink(
+    { name: "Not Yet Filled In, No Website", osmId: "node/4", lat: 56.1, lon: -4.9, website: null },
+    bookingUrls, "2026-08-01", "2026-08-02"
+  );
+  check(
+    "unfilled booking_url (\"\") with no website falls back to area search",
+    placeholderUnfilledNoWebsite.linkType === "search"
   );
 
   const malformed = buildAccommodationLink(
@@ -581,7 +614,7 @@ function selfTest() {
   return passed === results.length;
 }
 
-const Planner = { planTrip, buildBookingUrl, buildAccommodationLink, addDaysISO, clusterAccommodations, computeAscent, selfTest };
+const Planner = { planTrip, buildBookingUrl, buildAccommodationLink, addDaysISO, clusterAccommodations, computeAscent, selfTest, CJ_CLICK_BASE };
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = Planner;

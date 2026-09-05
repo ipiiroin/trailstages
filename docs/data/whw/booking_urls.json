@@ -4,11 +4,11 @@
     "_comment": "The Lomond (apartment, Milngavie, km 0.0) - search: https://www.booking.com/searchresults.html?ss=The+Lomond&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=55.9418042&longitude=-4.3165429"
   },
   "node/12156718066": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/westhighland-apartments-the-nevis.html",
     "_comment": "The Nevis (apartment, Milngavie, km 0.0) - search: https://www.booking.com/searchresults.html?ss=The+Nevis&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=55.9418104&longitude=-4.3165064"
   },
   "node/12156718073": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/west-highland-way-rooms.html",
     "_comment": "West Highland Way Rooms (apartment, Milngavie, km 0.0) - search: https://www.booking.com/searchresults.html?ss=West+Highland+Way+Rooms&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=55.9418451&longitude=-4.3163283"
   },
   "way/146223214": {
@@ -28,19 +28,19 @@
     "_comment": "West Highland Way Hotel (hotel, km 6.2) - search: https://www.booking.com/searchresults.html?ss=West+Highland+Way+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=55.9899203&longitude=-4.3368636"
   },
   "node/8968759441": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Woodedge Bed and Breakfast Killearn (guest_house, km 12.5) - search: https://www.booking.com/searchresults.html?ss=Woodedge+Bed+and+Breakfast+Killearn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.039079&longitude=-4.3671076"
   },
   "node/11964712332": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Old Mill Cottage (guest_house, Drymen, km 17.3) - search: https://www.booking.com/searchresults.html?ss=Old+Mill+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.043636&longitude=-4.4436833"
   },
   "node/12204169001": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/altquhur-byre.html",
     "_comment": "Altquhur Byre (guest_house, Drymen, km 17.5) - search: https://www.booking.com/searchresults.html?ss=Altquhur+Byre&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0530416&longitude=-4.4318094"
   },
   "node/4161662687": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/mulberry-lodge-guest-suite.html",
     "_comment": "Mulberry Lodge B&B (guest_house, Drymen, km 18.8) - search: https://www.booking.com/searchresults.html?ss=Mulberry+Lodge+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0652543&longitude=-4.4378166"
   },
   "node/7737926552": {
@@ -52,11 +52,11 @@
     "_comment": "Buchanan Arms Hotel (hotel, Drymen, km 18.9) - search: https://www.booking.com/searchresults.html?ss=Buchanan+Arms+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.063405&longitude=-4.4514834"
   },
   "node/969262696": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/the-clachan-inn.html",
     "_comment": "The Clachan Inn (hotel, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=The+Clachan+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.066093&longitude=-4.452505"
   },
   "node/3760739788": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ashbank-bed-breakfast.htm",
     "_comment": "Ashbank (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Ashbank&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0665898&longitude=-4.4526768"
   },
   "node/3985408641": {
@@ -76,11 +76,11 @@
     "_comment": "Bramblewood (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Bramblewood&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.069932&longitude=-4.4600067"
   },
   "node/11950457269": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/angel-cottage-drymen.html",
     "_comment": "Angel Cottage (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Angel+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0670883&longitude=-4.4517541"
   },
   "way/286604997": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/braeside-drymen.html",
     "_comment": "Braeside B&B (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Braeside+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0661412&longitude=-4.4521852"
   },
   "way/443805719": {
@@ -88,7 +88,7 @@
     "_comment": "Kip in the Kirk (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Kip+in+the+Kirk&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0664714&longitude=-4.4511548"
   },
   "node/4160642490": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/shandon-farmhouse-bed-and-breakfast.html",
     "_comment": "Shandon Farmhouse B&B (guest_house, Drymen, km 19.3) - search: https://www.booking.com/searchresults.html?ss=Shandon+Farmhouse+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0736727&longitude=-4.4450199"
   },
   "node/4161725393": {
@@ -104,7 +104,7 @@
     "_comment": "The Oak Tree Inn (guest_house, km 30.5) - search: https://www.booking.com/searchresults.html?ss=The+Oak+Tree+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0840733&longitude=-4.5399111"
   },
   "node/11201687137": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/balmaha-lodge-1.html",
     "_comment": "Balmaha Lodges (apartment, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Balmaha+Lodges&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0849648&longitude=-4.5406887"
   },
   "way/277825090": {
@@ -116,7 +116,7 @@
     "_comment": "Bay Cottage B&B (guest_house, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Bay+Cottage+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0845101&longitude=-4.540579"
   },
   "node/2327987339": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Coille Mhor Cottage (guest_house, Rowardennan, km 40.8) - search: https://www.booking.com/searchresults.html?ss=Coille+Mhor+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.141417&longitude=-4.6241218"
   },
   "node/410864818": {
@@ -148,23 +148,23 @@
     "_comment": "Inversnaid Hotel (hotel, km 54.3) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2431353&longitude=-4.6844475"
   },
   "node/4896947694": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Ardlui (hotel, Inverarnan, km 62.9) - search: https://www.booking.com/searchresults.html?ss=Ardlui&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3040376&longitude=-4.7205457"
   },
   "node/512565084": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/the-drovers-inn-inverarnan-by-ardlui.html",
     "_comment": "The Drovers Inn (hotel, Inverarnan, km 64.7) - search: https://www.booking.com/searchresults.html?ss=The+Drovers+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3283821&longitude=-4.7217691"
   },
   "node/1749721519": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Rose Cottage (guest_house, Inverarnan, km 64.7) - search: https://www.booking.com/searchresults.html?ss=Rose+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3294993&longitude=-4.7225071"
   },
   "node/2327993001": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "The Drovers Lodge (hotel, Inverarnan, km 64.7) - search: https://www.booking.com/searchresults.html?ss=The+Drovers+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3285549&longitude=-4.723004"
   },
   "node/3074867911": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Hillview Guesthouse (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Hillview+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3894012&longitude=-4.6187915"
   },
   "node/5111810533": {
@@ -172,11 +172,11 @@
     "_comment": "Glenadran House (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Glenadran+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3920399&longitude=-4.6140043"
   },
   "way/191047716": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Crianlarich Youth Hostel (hostel, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Crianlarich+Youth+Hostel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3914247&longitude=-4.6164906"
   },
   "way/292984635": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Craigbank Guesthouse (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Craigbank+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3919945&longitude=-4.6143078"
   },
   "node/392622933": {
@@ -188,11 +188,11 @@
     "_comment": "The Crianlarich Hotel (hotel, km 74.5) - search: https://www.booking.com/searchresults.html?ss=The+Crianlarich+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931682&longitude=-4.6196267"
   },
   "node/12893600097": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/glenbruar-house-crianlarich.html",
     "_comment": "Glenbruar B&B (guest_house, km 74.5) - search: https://www.booking.com/searchresults.html?ss=Glenbruar+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931194&longitude=-4.6186726"
   },
   "node/3101842570": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ewich-house.html",
     "_comment": "Ewich Guest House  Bed & Breakfast (guest_house, km 77.5) - search: https://www.booking.com/searchresults.html?ss=Ewich+Guest+House++Bed+%26+Breakfast&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4101744&longitude=-4.655317"
   },
   "node/1749662809": {
@@ -208,7 +208,7 @@
     "_comment": "Tyndrum Lodges (hotel, Tyndrum, km 83.5) - search: https://www.booking.com/searchresults.html?ss=Tyndrum+Lodges&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4340043&longitude=-4.7086773"
   },
   "way/59688792": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Muthu Royal Hotel (hotel, Tyndrum, km 83.5) - search: https://www.booking.com/searchresults.html?ss=Muthu+Royal+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4345734&longitude=-4.710379"
   },
   "node/4165969889": {
@@ -216,19 +216,19 @@
     "_comment": "Dalkell Cottage (guest_house, Tyndrum, km 83.7) - search: https://www.booking.com/searchresults.html?ss=Dalkell+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4351404&longitude=-4.7110795"
   },
   "node/4165972690": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Kilbride Lodge (guest_house, Tyndrum, km 83.7) - search: https://www.booking.com/searchresults.html?ss=Kilbride+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4345139&longitude=-4.7116282"
   },
   "way/59621061": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/by-the-way-campsite-lomond.html",
     "_comment": "By the Way (hostel, Tyndrum, km 83.8) - search: https://www.booking.com/searchresults.html?ss=By+the+Way&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.434208&longitude=-4.7136646"
   },
   "way/59621062": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/by-the-way-campsite-lomond.html",
     "_comment": "By the Way (hostel, Tyndrum, km 83.8) - search: https://www.booking.com/searchresults.html?ss=By+the+Way&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4340784&longitude=-4.7133227"
   },
   "way/59621270": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Camping cabin 2 (hostel, Tyndrum, km 83.8) - search: https://www.booking.com/searchresults.html?ss=Camping+cabin+2&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4338864&longitude=-4.7136854"
   },
   "way/59688841": {
@@ -240,15 +240,15 @@
     "_comment": "Clifton Cottage B&B (guest_house, Tyndrum, km 84.2) - search: https://www.booking.com/searchresults.html?ss=Clifton+Cottage+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4378072&longitude=-4.714158"
   },
   "node/1386523855": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Auch Lodge (chalet, Tyndrum, km 89.2) - search: https://www.booking.com/searchresults.html?ss=Auch+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.481196&longitude=-4.7229435"
   },
   "node/1386523856": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Coralan Cottage (chalet, Tyndrum, km 89.2) - search: https://www.booking.com/searchresults.html?ss=Coralan+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4812622&longitude=-4.7233311"
   },
   "node/1386523866": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Kinglass Cottage (chalet, Tyndrum, km 89.2) - search: https://www.booking.com/searchresults.html?ss=Kinglass+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4811026&longitude=-4.7235884"
   },
   "node/5094622544": {
@@ -264,7 +264,7 @@
     "_comment": "Inveroran (hotel, Inveroran, km 98.6) - search: https://www.booking.com/searchresults.html?ss=Inveroran&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.5329061&longitude=-4.8074223"
   },
   "way/57726832": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Kingshouse Hotel (hotel, Kingshouse, km 114.2) - search: https://www.booking.com/searchresults.html?ss=Kingshouse+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.6514894&longitude=-4.8413101"
   },
   "node/4169956402": {
@@ -292,7 +292,7 @@
     "_comment": "Highland Getaway Inn (hotel, Kinlochleven, km 128.5) - search: https://www.booking.com/searchresults.html?ss=Highland+Getaway+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.713367&longitude=-4.9636778"
   },
   "node/11279053471": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/west-highland-lodge.html",
     "_comment": "West Highland Lodge (hostel, Kinlochleven, km 128.5) - search: https://www.booking.com/searchresults.html?ss=West+Highland+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7114836&longitude=-4.9626208"
   },
   "node/12830442398": {
@@ -304,39 +304,39 @@
     "_comment": "Tailrace Inn (hotel, Kinlochleven, km 128.5) - search: https://www.booking.com/searchresults.html?ss=Tailrace+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7149567&longitude=-4.9638378"
   },
   "node/5926699210": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/leven-retreat-kinlochleven.html",
     "_comment": "West Highland Way Holidays (chalet, Kinlochleven, km 128.5) - search: https://www.booking.com/searchresults.html?ss=West+Highland+Way+Holidays&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.713217&longitude=-4.9668133"
   },
   "way/94129808": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "The Old Police Station (guest_house, Kinlochleven, km 128.7) - search: https://www.booking.com/searchresults.html?ss=The+Old+Police+Station&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7160128&longitude=-4.9644039"
   },
   "way/42107290": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Mamore Lodge (hotel, Kinlochleven, km 128.9) - search: https://www.booking.com/searchresults.html?ss=Mamore+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7226925&longitude=-4.965903"
   },
   "way/210587702": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/tigh-na-cheo.html",
     "_comment": "Tigh Na Cheo guest house (guest_house, Kinlochleven, km 129.1) - search: https://www.booking.com/searchresults.html?ss=Tigh+Na+Cheo+guest+house&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7130066&longitude=-4.9701764"
   },
   "node/5003765422": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Edencoille B&B (guest_house, Kinlochleven, km 129.1) - search: https://www.booking.com/searchresults.html?ss=Edencoille+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7123696&longitude=-4.9719183"
   },
   "way/94129696": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/macdonald-amp-cabins-2.html",
     "_comment": "MacDonald Hotel (hotel, Kinlochleven, km 129.2) - search: https://www.booking.com/searchresults.html?ss=MacDonald+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7163934&longitude=-4.9717832"
   },
   "way/200726445": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/glen-nevis-youth-hostel.html",
     "_comment": "Glen Nevis Youth Hostel (hostel, Fort William, km 148.0) - search: https://www.booking.com/searchresults.html?ss=Glen+Nevis+Youth+Hostel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7997216&longitude=-5.0676028"
   },
   "node/13189860247": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Achintee Farm (guest_house, Fort William, km 149.7) - search: https://www.booking.com/searchresults.html?ss=Achintee+Farm&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8108297&longitude=-5.0738208"
   },
   "node/4827633115": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Shelbeck (guest_house, Fort William, km 151.0) - search: https://www.booking.com/searchresults.html?ss=Shelbeck&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8335293&longitude=-5.075807"
   },
   "node/471028484": {
@@ -344,7 +344,7 @@
     "_comment": "Ben Nevis Hotel and Leisure Club (hotel, Fort William, km 151.3) - search: https://www.booking.com/searchresults.html?ss=Ben+Nevis+Hotel+and+Leisure+Club&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8269271&longitude=-5.0865425"
   },
   "node/2327994868": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "The Brevins Guesthouse (guest_house, Fort William, km 151.3) - search: https://www.booking.com/searchresults.html?ss=The+Brevins+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8209557&longitude=-5.0879197"
   },
   "node/13961760701": {
@@ -352,15 +352,15 @@
     "_comment": "Ben Nevis Guesthouse (guest_house, Fort William, km 151.5) - search: https://www.booking.com/searchresults.html?ss=Ben+Nevis+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8210813&longitude=-5.0897959"
   },
   "way/363761332": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/braemar-guest-house-highland.html",
     "_comment": "Braemar Guesthouse (hotel, Fort William, km 151.5) - search: https://www.booking.com/searchresults.html?ss=Braemar+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8256528&longitude=-5.0896099"
   },
   "node/6810715269": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/glenlochy-nevis-bridge-apartments.html",
     "_comment": "Glenlochy Nevis Bridge Apartments (chalet, Fort William, km 151.7) - search: https://www.booking.com/searchresults.html?ss=Glenlochy+Nevis+Bridge+Apartments&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.822097&longitude=-5.0926501"
   },
   "way/201269746": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/nevis-bank-inn.html",
     "_comment": "Nevis Bank Inn (hotel, Fort William, km 151.9) - search: https://www.booking.com/searchresults.html?ss=Nevis+Bank+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8213842&longitude=-5.095466"
   },
   "node/5182202592": {
@@ -368,19 +368,19 @@
     "_comment": "Craig Nevis (guest_house, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Craig+Nevis&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8203554&longitude=-5.1016133"
   },
   "node/6064447649": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ben-view-guesthouse.html",
     "_comment": "Ben View Guest House (guest_house, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Ben+View+Guest+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8205296&longitude=-5.1023962"
   },
   "node/6064447650": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Valtos Bed and Breakfast (guest_house, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Valtos+Bed+and+Breakfast&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8203699&longitude=-5.1029373"
   },
   "node/6064447654": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/maclean-guest-house.html",
     "_comment": "MacLean Guest House (guest_house, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=MacLean+Guest+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8201897&longitude=-5.102318"
   },
   "node/6064447655": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/berkeley-house-fort-william.html",
     "_comment": "Berkeley (guest_house, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Berkeley&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8200649&longitude=-5.1026031"
   },
   "node/12376820954": {
@@ -392,7 +392,7 @@
     "_comment": "Premier Inn (hotel, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Premier+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8231647&longitude=-5.1040011"
   },
   "way/194467694": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/fort-william-backpackers.html",
     "_comment": "Fort William Backpackers (hostel, Fort William, km 152.3) - search: https://www.booking.com/searchresults.html?ss=Fort+William+Backpackers&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8195623&longitude=-5.100908"
   },
   "node/4197338993": {
@@ -400,75 +400,75 @@
     "_comment": "B&B (hostel, Fort William, km 152.4) - search: https://www.booking.com/searchresults.html?ss=B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8181114&longitude=-5.1035482"
   },
   "node/4171781494": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Ardmory B&B (guest_house, Fort William, km 152.5) - search: https://www.booking.com/searchresults.html?ss=Ardmory+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8177547&longitude=-5.1062358"
   },
   "node/254905640": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/alexandrahotel.html",
     "_comment": "Alexandra Hotel (hotel, Fort William, km 152.6) - search: https://www.booking.com/searchresults.html?ss=Alexandra+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8193271&longitude=-5.1066389"
   },
   "node/4172105593": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/gara-ni.html",
     "_comment": "Gara Ni B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Gara+Ni+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8183718&longitude=-5.1075093"
   },
   "node/255102399": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/the-best-western-imperial.html",
     "_comment": "Best Western Imperial Hotel (hotel, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Best+Western+Imperial+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8187737&longitude=-5.1106649"
   },
   "node/885716653": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/bankstreetlodge.html",
     "_comment": "Bank Street Lodge (hostel, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Bank+Street+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8181354&longitude=-5.108446"
   },
   "node/4171746298": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/st-andrews-house-fort-william.html",
     "_comment": "Saint Andrew's Guest House (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Saint+Andrew%27s+Guest+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8180026&longitude=-5.1071459"
   },
   "node/4171748707": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/aldourie-guest-house.html",
     "_comment": "Aldourie B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Aldourie+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.817644&longitude=-5.1084143"
   },
   "node/4171774798": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/stobahn-guest-house-fort-william.html",
     "_comment": "Stobahn B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Stobahn+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8175455&longitude=-5.1086386"
   },
   "node/4171781392": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/anagrae.html",
     "_comment": "Anagrae B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Anagrae+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8177902&longitude=-5.1093651"
   },
   "node/4171790497": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Constantia B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Constantia+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8178386&longitude=-5.1079869"
   },
   "node/4171916389": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Caberfeidh n\u00b01 B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Caberfeidh+n%C2%B01+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8180126&longitude=-5.1082532"
   },
   "node/4172611892": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Caberfeidh Lodge (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Caberfeidh+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8180518&longitude=-5.1081642"
   },
   "node/4171748704": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Glenmoidart B&B (guest_house, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=Glenmoidart+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8167369&longitude=-5.1098233"
   },
   "node/6749616142": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ossians.html",
     "_comment": "Ossians (hotel, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=Ossians&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8176368&longitude=-5.1119461"
   },
   "node/6810106554": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Ardblair B&B (guest_house, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=Ardblair+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8165319&longitude=-5.1101915"
   },
   "node/6810071718": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/melrose-fort-william.html",
     "_comment": "Melrose (guest_house, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=Melrose&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.815347&longitude=-5.1097776"
   },
   "node/6810072335": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "St Anthonys B&B (guest_house, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=St+Anthonys+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8151039&longitude=-5.1104481"
   },
   "node/6810100068": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Heatherlie B&B (guest_house, Fort William, km 153.0) - search: https://www.booking.com/searchresults.html?ss=Heatherlie+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8154458&longitude=-5.1095362"
   },
   "node/254907335": {
@@ -480,11 +480,11 @@
     "_comment": "Gowan Brae House (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Gowan+Brae+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8147045&longitude=-5.114066"
   },
   "node/2065633611": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/myrtle-bank-guest-house-fort-william.html",
     "_comment": "Myrtle Bank Guest House (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Myrtle+Bank+Guest+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.812764&longitude=-5.1195385"
   },
   "node/2260062088": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/po-travelodge-fort-william-fort-william.html",
     "_comment": "Travelodge (hotel, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Travelodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8164046&longitude=-5.1137424"
   },
   "node/2534025582": {
@@ -504,7 +504,7 @@
     "_comment": "Fassfern Guest House (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Fassfern+Guest+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8136636&longitude=-5.1179016"
   },
   "node/4895229225": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/locheil-villa-guest-house.html",
     "_comment": "Lochiel Villa (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Lochiel+Villa&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8134742&longitude=-5.1181993"
   },
   "node/4895229227": {
@@ -512,7 +512,7 @@
     "_comment": "Dalchreggan B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Dalchreggan+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8118289&longitude=-5.1210034"
   },
   "node/4895229228": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/buccleuch-guest-house.html",
     "_comment": "Buccleuch B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Buccleuch+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8115215&longitude=-5.1214528"
   },
   "node/4895229229": {
@@ -524,47 +524,47 @@
     "_comment": "Strathavon B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Strathavon+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8102251&longitude=-5.1204658"
   },
   "node/5294473225": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/braeside-house-beautiful-home-and-views.html",
     "_comment": "Braeside House (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Braeside+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8146128&longitude=-5.1116548"
   },
   "node/6806443701": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Hotel Alba B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Hotel+Alba+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8085513&longitude=-5.1255835"
   },
   "node/6806450382": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/morvich-house.html",
     "_comment": "Morvich B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Morvich+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8063551&longitude=-5.1289436"
   },
   "node/6806452803": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ardlinnhe-bed-amp-breaakfast.html",
     "_comment": "Ardlinnhe B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Ardlinnhe+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8113327&longitude=-5.1217747"
   },
   "node/6806494420": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Chenderoh B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Chenderoh+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8094198&longitude=-5.1246061"
   },
   "node/6806502411": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/ashburn-house-fort-william.html",
     "_comment": "Ashburn House B&B (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Ashburn+House+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8108565&longitude=-5.122633"
   },
   "node/10605005604": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Camdale (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Camdale&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8079198&longitude=-5.1186657"
   },
   "way/200855909": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/the-garrison.html",
     "_comment": "The Garrison (hotel, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=The+Garrison&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8154073&longitude=-5.1149088"
   },
   "way/201015121": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/lime-tree-an-ealdhain.html",
     "_comment": "Lime Tree Hotel (hotel, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Lime+Tree+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8146219&longitude=-5.1163837"
   },
   "way/202210751": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/glentower-lower-observatory.html",
     "_comment": "Glentower Lower Observatory (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Glentower+Lower+Observatory&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8132705&longitude=-5.1183915"
   },
   "way/202210752": {
-    "booking_url": "",
+    "booking_url": "https://www.booking.com/hotel/gb/cruachan.html",
     "_comment": "Cruachan Hotel (hotel, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Cruachan+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8128458&longitude=-5.1187696"
   },
   "way/202338677": {
@@ -572,7 +572,7 @@
     "_comment": "Highland Hotel (hotel, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Highland+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8154349&longitude=-5.1122569"
   },
   "way/404366371": {
-    "booking_url": "",
+    "booking_url": null,
     "_comment": "Lochview House (guest_house, Fort William, km 153.1) - search: https://www.booking.com/searchresults.html?ss=Lochview+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8126451&longitude=-5.1130812"
   }
 }
