@@ -7,11 +7,27 @@
 // Approximate km of named stops along the West Highland Way, in canonical
 // Milngavie(0) -> Fort William(~153) order. Used only to label stage
 // endpoints for display - the engine itself only deals in km and clusters.
+//
+// This list must cover every km value the segmentation engine can ever
+// return as a stage endpoint, for any day count (trail.json's min_days to
+// max_days), either direction, and with/without camping - otherwise
+// placeLabelForKm() falls back to a bare "km X" label instead of a place
+// name. Killearn/Balmaha/Cashel/Inversnaid/Crianlarich were missing (e.g.
+// a 6-day Milngavie->Fort William plan showed "Milngavie to km 30.4"
+// instead of "Milngavie to Balmaha") - verified by enumerating every
+// stage endpoint across days 4-11 x both directions x camping on/off and
+// checking each resolves to a real name, not just patching the one
+// reported case.
 const TRAIL_TOWNS = [
   { name: "Milngavie", km: 0 },
+  { name: "Killearn", km: 12.5 },
   { name: "Drymen", km: 19 },
+  { name: "Balmaha", km: 30.5 },
+  { name: "Cashel", km: 35.7 },
   { name: "Rowardennan", km: 43 },
+  { name: "Inversnaid", km: 54.3 },
   { name: "Inverarnan", km: 66 },
+  { name: "Crianlarich", km: 74.4 },
   { name: "Tyndrum", km: 85 },
   { name: "Inveroran", km: 98 },
   { name: "Kingshouse", km: 115 },
