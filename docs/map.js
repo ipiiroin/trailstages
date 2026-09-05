@@ -3,9 +3,20 @@
  * colored segments and accommodation markers once an itinerary is planned.
  */
 
+// Named for what each hue actually is on the Highland landscape, in the
+// order a stage is likely to encounter them - not an arbitrary rainbow.
 const DAY_COLORS = [
-  "#8a4b2f", "#2f6b8a", "#4b8a2f", "#8a2f6b",
-  "#2f8a7a", "#8a7a2f", "#5b2f8a", "#8a2f2f", "#2f5b8a",
+  "#c1006b", // explorer pink
+  "#35647d", // loch blue
+  "#a85a24", // contour rust
+  "#55694a", // moss
+  "#6b4f7a", // heather
+  "#9c7a1e", // gorse gold
+  "#4a5a63", // slate
+  "#5c4a3a", // peat
+  "#4e7fa0", // sky
+  "#8b5e3c", // bracken
+  "#7d5a82", // thistle
 ];
 
 const TrailMap = (() => {
@@ -23,7 +34,9 @@ const TrailMap = (() => {
     }).addTo(map);
 
     const latlngs = route.map((p) => [p.lat, p.lon]);
-    const baseLine = L.polyline(latlngs, { color: "#999999", weight: 3, opacity: 0.6 }).addTo(map);
+    // Dashed, like a right-of-way footpath on an OS map, rather than a
+    // solid generic "route line."
+    const baseLine = L.polyline(latlngs, { color: "#24272b", weight: 3, opacity: 0.55, dashArray: "1,7" }).addTo(map);
     map.fitBounds(baseLine.getBounds(), { padding: [20, 20] });
 
     itineraryLayer = L.layerGroup().addTo(map);
@@ -89,7 +102,16 @@ const TrailMap = (() => {
     }
   }
 
-  return { init, renderItinerary, DAY_COLORS };
+  // Leaflet sizes itself from its container's on-screen dimensions at init
+  // time; if the map starts out inside a display:none tab panel (mobile's
+  // "Route map" tab, unselected on load) it measures as 0x0 and tiles never
+  // fill in correctly even after the panel becomes visible. Call this right
+  // after the panel is shown so Leaflet re-measures.
+  function invalidateSize() {
+    if (map) map.invalidateSize();
+  }
+
+  return { init, renderItinerary, invalidateSize, DAY_COLORS };
 })();
 
 if (typeof window !== "undefined") {

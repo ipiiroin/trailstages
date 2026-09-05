@@ -1,141 +1,438 @@
+/* ============================================================
+   Fonts — self-hosted variable fonts, no external font service.
+   Overpass: signage/wayfinding lineage (derived from US highway
+   gothic) — used for everything functional: headings, data figures,
+   controls. Vollkorn: a sturdy book serif — used only for prose
+   (the intro line, footer, the balance-warning note).
+   ============================================================ */
+@font-face {
+  font-family: "Overpass";
+  src: url("fonts/Overpass.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vollkorn";
+  src: url("fonts/Vollkorn.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   Design tokens
+   ============================================================ */
 :root {
-  --color-bg: #f7f5f0;
-  --color-ink: #262521;
-  --color-muted: #6b6a63;
-  --color-accent: #8a4b2f;
-  --color-border: #d9d5c9;
-  --color-card: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Colour — lifted from Ordnance Survey map conventions and the
+     Highland landscape, not a generic travel-app or AI-default palette. */
+  --paper: #efeee4;       /* page background: cool map-stock, not warm cream */
+  --paper-raised: #f7f6ee;
+  --ink: #24272b;         /* primary text: cool charcoal, not warm near-black */
+  --ink-soft: #565a52;    /* secondary text */
+  --border: #d6d3c3;
+
+  --pink: #c1006b;        /* Explorer Pink — the one bold accent. Fills only. */
+  --pink-ink: #7a0044;    /* darker pink for text-on-paper contexts */
+  --rust: #a85a24;        /* Contour Rust — ascent, terrain, notes */
+  --rust-bg: rgba(168, 90, 36, 0.12);
+  --loch: #35647d;        /* Loch Blue — secondary links, calm states */
+  --moss: #55694a;        /* Moss — camping toggle, woodland accents */
+
+  --error-bg: #f3ded9;
+  --error-ink: #7a2a1e;
+
+  --font-display: "Overpass", "Segoe UI", Arial, sans-serif;
+  --font-body: "Vollkorn", Georgia, "Times New Roman", serif;
+
+  --radius: 3px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --focus-ring: 3px solid var(--pink);
+
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --transition-fast: 140ms ease;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background: var(--color-bg);
-  color: var(--color-ink);
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+}
+
+a {
+  color: var(--loch);
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Visible keyboard focus everywhere, in one consistent style. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* ============================================================
+   Header + route profile hero
+   ============================================================ */
 .app-header {
-  padding: 1.25rem 1.5rem 0.75rem;
+  padding: var(--space-4) var(--space-4) 0;
+  max-width: 64rem;
+  margin: 0 auto;
 }
 
 .app-header h1 {
-  margin: 0 0 0.25rem;
   font-size: 1.5rem;
+  letter-spacing: -0.01em;
 }
 
 .subtitle {
-  margin: 0;
-  color: var(--color-muted);
-  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  max-width: 42rem;
+  line-height: 1.5;
 }
 
-.app-layout {
+.route-profile {
+  margin-top: var(--space-4);
+  line-height: 0;
+}
+
+.route-profile svg {
+  width: 100%;
+  height: 88px;
+  display: block;
+}
+
+.route-profile-area {
+  fill: var(--rust-bg);
+}
+
+.route-profile-line {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.route-profile-tick {
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.route-profile-scale {
   display: flex;
-  gap: 1rem;
-  padding: 0 1.5rem 1rem;
-  align-items: flex-start;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-top: var(--space-1);
 }
 
-.map-pane {
-  flex: 3;
-  min-width: 0;
-}
-
-#map {
-  height: 70vh;
-  min-height: 420px;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-}
-
-.control-pane {
-  flex: 2;
-  min-width: 300px;
-  max-width: 420px;
-}
-
+/* ============================================================
+   Controls
+   ============================================================ */
 .controls {
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: 1rem;
+  max-width: 64rem;
+  margin: var(--space-5) auto 0;
+  padding: 0 var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
 }
 
 .control {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.9rem;
+  gap: var(--space-2);
 }
 
-.control input,
-.control select {
-  font-size: 1rem;
+.control label,
+.control > label {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .control-checkbox {
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  gap: var(--space-2);
 }
 
-.control-checkbox input {
-  width: auto;
+.control select,
+.control input[type="date"] {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  min-height: 2.75rem;
+}
+
+.control-checkbox input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--moss);
+  flex: none;
+}
+
+#days-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--pink-ink);
+}
+
+/* Range slider: a trail line with a waymarker-post thumb, but still a
+   plain native <input type=range> underneath — full keyboard/AT support. */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2.75rem;
+  background: transparent;
+  margin: 0;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: repeating-linear-gradient(to right, var(--ink) 0 6px, transparent 6px 11px);
+  border-radius: 2px;
+}
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: repeating-linear-gradient(to right, var(--ink) 0 6px, transparent 6px 11px);
+  border-radius: 2px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-top: -0.85rem;
+  background: var(--pink);
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  cursor: pointer;
+  border: none;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--pink);
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  cursor: pointer;
+  border: none;
+}
+
+/* ============================================================
+   View tabs (mobile map/itinerary switch)
+   ============================================================ */
+.view-tabs {
+  max-width: 64rem;
+  margin: var(--space-5) auto 0;
+  padding: 0 var(--space-4);
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 2px solid var(--border);
+}
+
+.view-tab {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: none;
+  border: none;
+  padding: var(--space-3) var(--space-2);
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  min-height: 2.75rem;
+}
+
+.view-tab[aria-selected="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--pink);
+}
+
+/* ============================================================
+   View panels (itinerary / map) — mobile: one at a time via tabs;
+   desktop: both, side by side, tabs hidden.
+   ============================================================ */
+.view-layout {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.view-panel[data-hidden="true"] {
+  display: none;
+}
+
+#map {
+  height: 65vh;
+  min-height: 360px;
+  border: 1px solid var(--border);
 }
 
 .itinerary-error {
-  background: #fdecea;
-  border: 1px solid #e5a19a;
-  color: #8a2f24;
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  background: var(--error-bg);
+  color: var(--error-ink);
+  border-left: 4px solid var(--error-ink);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: 0.95rem;
 }
 
 .itinerary-note {
-  background: #fff6e0;
-  border: 1px solid #e8cf8a;
-  color: #6b4f10;
-  border-radius: 8px;
-  padding: 0.7rem 0.9rem;
-  margin: 0 0 0.75rem;
-  font-size: 0.85rem;
+  font-family: var(--font-body);
+  background: var(--rust-bg);
+  color: var(--rust);
+  border-left: 4px solid var(--rust);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-4);
+  font-size: 0.95rem;
 }
 
-.itinerary-panel {
+/* ============================================================
+   Day stages — a route "spine" of waymarker roundels, each
+   connected to a flat-bordered route-card. Not rounded SaaS cards:
+   crisp corners, a solid border, no drop shadow.
+   ============================================================ */
+.day-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-height: 60vh;
-  overflow-y: auto;
+  gap: var(--space-5);
+}
+
+.day-stage {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.day-stage:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 1.375rem;
+  top: 2.75rem;
+  bottom: calc(-1 * var(--space-5) - 0.25rem);
+  width: 2px;
+  background: var(--border);
+  transform: translateX(-1px);
+}
+
+.day-roundel {
+  width: 2.75rem;
+  height: 2.75rem;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  background: var(--day-color, var(--pink));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  z-index: 1;
 }
 
 .day-card {
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-left: 5px solid var(--day-color, var(--color-accent));
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: var(--space-4);
+  min-width: 0;
 }
 
 .day-card h3 {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
+  font-size: 1.15rem;
+  margin-bottom: var(--space-3);
 }
 
-.day-card .stage-meta {
-  color: var(--color-muted);
+.stage-stats {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.stage-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-stat .stage-stat-unit {
+  font-weight: 400;
   font-size: 0.85rem;
-  margin-bottom: 0.5rem;
+  color: var(--ink-soft);
+}
+
+.stage-stat svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: none;
+}
+
+.stat-distance svg { color: var(--loch); }
+.stat-ascent svg { color: var(--rust); }
+
+.stage-date {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
 }
 
 .accommodation-list {
@@ -144,87 +441,159 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-2);
 }
 
 .accommodation-list li {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: 0.88rem;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--border);
 }
 
-.accommodation-list .acc-type {
-  color: var(--color-muted);
-  font-size: 0.78rem;
+.accommodation-list li:first-child {
+  border-top: none;
 }
 
-.accommodation-list a {
-  text-decoration: none;
-  white-space: nowrap;
+.acc-name-block {
+  min-width: 0;
+}
+
+.acc-name {
+  font-weight: 600;
+}
+
+.acc-type {
+  color: var(--ink-soft);
   font-size: 0.82rem;
+  display: block;
 }
 
-.accommodation-list a:hover {
-  text-decoration: underline;
+/* Real tap targets, not arrow-suffixed text links. */
+.acc-link {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex: none;
+  border: 2px solid transparent;
 }
 
 .acc-link-direct {
-  color: var(--color-accent);
-  font-weight: 600;
+  background: var(--pink);
+  color: #fff;
 }
 
 .acc-link-website,
 .acc-link-search {
-  color: var(--color-muted);
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .acc-link {
+    transition: transform var(--transition-fast);
+  }
+  .acc-link:active {
+    transform: scale(0.97);
+  }
 }
 
 .passed-along {
-  margin-top: 0.6rem;
-  font-size: 0.82rem;
+  margin-top: var(--space-3);
+  font-size: 0.88rem;
+  font-family: var(--font-body);
 }
 
 .passed-along summary {
-  color: var(--color-muted);
+  color: var(--ink-soft);
   cursor: pointer;
 }
 
 .passed-along .accommodation-list {
-  margin-top: 0.4rem;
-  padding-left: 0.5rem;
+  margin-top: var(--space-2);
 }
 
 .show-more-toggle {
-  margin-top: 0.5rem;
+  margin-top: var(--space-2);
   background: none;
   border: none;
-  padding: 0;
-  color: var(--color-accent);
-  font-size: 0.82rem;
+  padding: var(--space-1) 0;
+  color: var(--loch);
+  font-size: 0.88rem;
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: underline;
+  min-height: 2.5rem;
 }
 
+/* ============================================================
+   Footer — quiet, legible, not competing with the itinerary.
+   ============================================================ */
 .app-footer {
-  padding: 1rem 1.5rem 1.5rem;
-  color: var(--color-muted);
-  font-size: 0.78rem;
+  max-width: 64rem;
+  margin: var(--space-6) auto 0;
+  padding: var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+.app-footer p {
+  margin: 0 0 var(--space-2);
+  max-width: 60ch;
+}
+
+.app-footer p:last-child {
+  margin-bottom: 0;
 }
 
 .app-footer a {
-  color: var(--color-accent);
+  color: var(--ink-soft);
 }
 
-@media (max-width: 900px) {
-  .app-layout {
-    flex-direction: column;
+/* ============================================================
+   Desktop: sticky split — itinerary beside the map, tabs hidden.
+   A genuinely different structure, not a squeezed mobile layout.
+   ============================================================ */
+@media (min-width: 60rem) {
+  .controls {
+    grid-template-columns: 1fr 1fr;
   }
-  .map-pane,
-  .control-pane {
-    flex: none;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
+
+  .view-tabs {
+    display: none;
+  }
+
+  .view-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .view-panel[data-hidden="true"] {
+    display: block;
+  }
+
+  .map-view {
+    position: sticky;
+    top: var(--space-4);
+  }
+
+  #map {
+    height: calc(100vh - 2 * var(--space-4));
+    min-height: 480px;
   }
 }

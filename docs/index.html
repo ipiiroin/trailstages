@@ -12,42 +12,53 @@
 <header class="app-header">
   <h1>West Highland Way — Inn-to-Inn Planner</h1>
   <p class="subtitle">Milngavie to Fort William, ~154 km. Pick your days, get a stage-by-stage itinerary that always ends at real accommodation.</p>
+
+  <div class="route-profile" id="route-profile" aria-hidden="true"></div>
+  <div class="route-profile-scale" aria-hidden="true">
+    <span>Milngavie</span>
+    <span>Fort William</span>
+  </div>
 </header>
 
-<main class="app-layout">
-  <section class="map-pane">
-    <div id="map"></div>
+<form class="controls" id="controls">
+  <div class="control">
+    <label for="days-slider">Days <strong id="days-value">6</strong></label>
+    <input type="range" id="days-slider" min="4" max="11" value="6" step="1" />
+  </div>
+
+  <div class="control">
+    <label for="direction-select">Direction</label>
+    <select id="direction-select">
+      <option value="forward">Milngavie → Fort William</option>
+      <option value="reverse">Fort William → Milngavie</option>
+    </select>
+  </div>
+
+  <div class="control">
+    <label for="start-date">Start date</label>
+    <input type="date" id="start-date" />
+  </div>
+
+  <label class="control control-checkbox" for="include-camping">
+    <input type="checkbox" id="include-camping" />
+    <span>Include campsites (carrying a tent)</span>
+  </label>
+</form>
+
+<div class="view-tabs" role="tablist">
+  <button type="button" class="view-tab" data-view="itinerary" role="tab" id="tab-itinerary" aria-controls="itinerary-view" aria-selected="true">Day-by-day</button>
+  <button type="button" class="view-tab" data-view="map" role="tab" id="tab-map" aria-controls="map-view" aria-selected="false" tabindex="-1">Route map</button>
+</div>
+
+<main class="view-layout">
+  <section class="view-panel itinerary-view" id="itinerary-view" role="tabpanel" aria-labelledby="tab-itinerary">
+    <div id="itinerary-error" class="itinerary-error" hidden></div>
+    <ol id="itinerary-panel" class="day-stages"></ol>
   </section>
 
-  <aside class="control-pane">
-    <div class="controls">
-      <label class="control">
-        <span>Days: <strong id="days-value">6</strong></span>
-        <input type="range" id="days-slider" min="4" max="11" value="6" step="1" />
-      </label>
-
-      <label class="control">
-        <span>Direction</span>
-        <select id="direction-select">
-          <option value="forward">Milngavie → Fort William</option>
-          <option value="reverse">Fort William → Milngavie</option>
-        </select>
-      </label>
-
-      <label class="control">
-        <span>Trip start date</span>
-        <input type="date" id="start-date" />
-      </label>
-
-      <label class="control control-checkbox">
-        <input type="checkbox" id="include-camping" />
-        <span>Include campsites (for those carrying a tent)</span>
-      </label>
-    </div>
-
-    <div id="itinerary-error" class="itinerary-error" hidden></div>
-    <div id="itinerary-panel" class="itinerary-panel"></div>
-  </aside>
+  <section class="view-panel map-view" id="map-view" role="tabpanel" aria-labelledby="tab-map">
+    <div id="map"></div>
+  </section>
 </main>
 
 <footer class="app-footer">
