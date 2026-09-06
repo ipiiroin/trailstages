@@ -17,12 +17,20 @@
 
 const CLUSTER_GAP_KM = 1.0;
 const MIN_AVG_STAGE_KM = 8;
-const MAX_AVG_STAGE_KM = 35;
+// Above this, a plan is refused outright rather than attempted - reserved
+// for requests too extreme to produce anything useful (e.g. 2 days on this
+// trail averages ~76 km/day). 55 sits just above 3 days' 51 km/day average,
+// so 3 days is attempted (and gets flagged via STAGE_WARN_MAX_KM below)
+// rather than blocked.
+const MAX_AVG_STAGE_KM = 55;
 
 // A finished plan with a stage outside this range is still returned (the
 // requested day count is never overridden), but flagged with a note
-// suggesting a better-balanced day count nearby.
-const STAGE_WARN_MAX_KM = 35;
+// suggesting a better-balanced day count nearby. 48 sits between 4 days'
+// worst-case stage (~43 km, every direction/camping combination) and 3
+// days' best-case stage (~54 km) - so 4+ days come back clean and 3 days
+// always carries the note.
+const STAGE_WARN_MAX_KM = 48;
 const STAGE_WARN_MIN_KM = 5;
 
 const ROOFED_TYPES = new Set(["hotel", "guest_house", "hostel", "bed_and_breakfast", "chalet", "apartment"]);
