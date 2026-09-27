@@ -22,6 +22,7 @@ const DAY_COLORS = [
 const TrailMap = (() => {
   let map = null;
   let itineraryLayer = null;
+  let sectionLayer = null;
 
   function init(containerId, route) {
     map = L.map(containerId);
@@ -39,8 +40,22 @@ const TrailMap = (() => {
     const baseLine = L.polyline(latlngs, { color: "#24272b", weight: 3, opacity: 0.55, dashArray: "1,7" }).addTo(map);
     map.fitBounds(baseLine.getBounds(), { padding: [20, 20] });
 
+    // Section-mode trails: the chosen section sits under the day segments,
+    // so it stays visible when there is no plan to draw (stops not mapped).
+    sectionLayer = L.layerGroup().addTo(map);
     itineraryLayer = L.layerGroup().addTo(map);
     return map;
+  }
+
+  /** Highlight the part of the route between two real-km points; zoom to
+   * it when `fit` is true (on a section change, not on every re-plan). */
+  function showSection(route, kmA, kmB, fit) {
+    sectionLayer.clearLayers();
+    const segment = sliceRouteByRealKm(route, kmA, kmB);
+    if (segment.length < 2) return;
+    const line = L.polyline(segment.map((p) => [p.lat, p.lon]), { color: "#24272b", weight: 4, opacity: 0.8 })
+      .addTo(sectionLayer);
+    if (fit) map.fitBounds(line.getBounds(), { padding: [20, 20] });
   }
 
   function sliceRouteByRealKm(route, kmA, kmB) {
@@ -59,13 +74,15 @@ const TrailMap = (() => {
     direct: "Check availability on Booking.com",
     website: "Visit property website",
     search: "Search area on Booking.com",
+    info: "Hut info",
   };
 
   function buildPopupHtml(stage, acc, link) {
-    const typeLabel = acc.type ? acc.type.replace(/_/g, " ") : "accommodation";
+    const typeLabel = acc.label || (acc.type ? acc.type.replace(/_/g, " ") : "accommodation");
     const offRoute = acc.offRouteM > 0 ? `<br>${acc.offRouteM} m off route` : "";
-    const linkHtml = link
-      ? `<br><a href="${link.url}" target="_blank" rel="noopener">${LINK_LABELS[link.linkType]}</a>`
+    // OSM-sourced URLs are free text: http(s) only, escaped.
+    const linkHtml = link && /^https?:\/\//i.test(link.url)
+      ? `<br><a href="${escapeHtml(link.url)}" target="_blank" rel="noopener">${LINK_LABELS[link.linkType]}</a>`
       : "";
     return (
       `<strong>${escapeHtml(acc.name)}</strong><br>` +
@@ -111,7 +128,7 @@ const TrailMap = (() => {
     if (map) map.invalidateSize();
   }
 
-  return { init, renderItinerary, invalidateSize, DAY_COLORS };
+  return { init, renderItinerary, showSection, invalidateSize, DAY_COLORS };
 })();
 
 if (typeof window !== "undefined") {

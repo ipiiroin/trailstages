@@ -17,6 +17,10 @@
 
 const CLUSTER_GAP_KM = 1.0;
 const MIN_AVG_STAGE_KM = 8;
+// The two upper limits below are the defaults, tuned for walking the WHW;
+// a trail can override them via planTrip's `limits` (the UKK allows up to
+// 60 km/day so bike and running plans can be tried).
+//
 // Above this, a plan is refused outright rather than attempted - reserved
 // for requests too extreme to produce anything useful (e.g. 2 days on this
 // trail averages ~76 km/day). 55 sits just above 3 days' 51 km/day average,
@@ -33,7 +37,14 @@ const MAX_AVG_STAGE_KM = 55;
 const STAGE_WARN_MAX_KM = 48;
 const STAGE_WARN_MIN_KM = 5;
 
-const ROOFED_TYPES = new Set(["hotel", "guest_house", "hostel", "bed_and_breakfast", "chalet", "apartment"]);
+// Overnight stops with a roof. wilderness_hut covers both the UKK's free
+// autiotupa and its bookable vuokratupa (the `tier` field tells them apart).
+const ROOFED_TYPES = new Set([
+  "hotel", "motel", "guest_house", "hostel", "bed_and_breakfast", "chalet", "apartment", "alpine_hut", "wilderness_hut",
+]);
+// Stops that need your own tent or sleeping gear: campsites, and open
+// shelters (laavu / kota). Only candidates when includeCamping is on.
+const CAMPING_TYPES = new Set(["camp_site", "shelter"]);
 
 function roofedOptions(cluster) {
   return cluster.options.filter((o) => ROOFED_TYPES.has(o.type));
@@ -92,13 +103,14 @@ function computeAscent(routePoints, fromKm, toKm) {
   return Math.round(ascent);
 }
 
-/** Clusters eligible as overnight stops: always roofed, plus camp_site-only
- * clusters when includeCamping is checked. A cluster with both kinds is
- * eligible either way (its camping options just won't be shown/booked
- * unless includeCamping is on - see displayOptions). */
+/** Clusters eligible as overnight stops: always roofed, plus camping-only
+ * clusters (campsites, laavu/kota shelters) when includeCamping is checked.
+ * A cluster with both kinds is eligible either way (its camping options
+ * just won't be shown/booked unless includeCamping is on - see
+ * displayOptions). */
 function candidatePool(clusters, includeCamping) {
   return clusters.filter(
-    (c) => clusterHasRoofed(c) || (includeCamping && c.options.some((o) => o.type === "camp_site"))
+    (c) => clusterHasRoofed(c) || (includeCamping && c.options.some((o) => CAMPING_TYPES.has(o.type)))
   );
 }
 
@@ -183,6 +195,24 @@ function findBestPartition(points, totalStages) {
   return { pathIdx, maxStage: bestMax };
 }
 
+/** accommodations.json record -> the shape the UI renders. `tier` and
+ * `label` are UKK-only (null on WHW): tier picks the link rule in
+ * buildAccommodationLink, label is a display name like "autiotupa". */
+function toStageOption(o) {
+  return {
+    name: o.name,
+    type: o.type,
+    tier: o.tier || null,
+    label: o.label || null,
+    offRouteM: o.off_route_m,
+    lat: o.lat,
+    lon: o.lon,
+    km: o.km,
+    website: o.website || null,
+    osmId: o.osm_id || null,
+  };
+}
+
 function buildStageObject(dayNumber, fromKm, toKm, fromRealKm, cluster, walkRoute, includeCamping, passedAlong) {
   return {
     day: dayNumber,
@@ -192,42 +222,49 @@ function buildStageObject(dayNumber, fromKm, toKm, fromRealKm, cluster, walkRout
     ascentM: computeAscent(walkRoute, fromKm, toKm),
     fromRealKm: round2(fromRealKm),
     endRealKm: round2(cluster.realKm),
-    accommodations: displayOptions(cluster, includeCamping).map((o) => ({
-      name: o.name,
-      type: o.type,
-      offRouteM: o.off_route_m,
-      lat: o.lat,
-      lon: o.lon,
-      km: o.km,
-      website: o.website || null,
-      osmId: o.osm_id || null,
-    })),
-    passedAlong: passedAlong.flatMap((c) =>
-      displayOptions(c, includeCamping).map((o) => ({
-        name: o.name,
-        type: o.type,
-        offRouteM: o.off_route_m,
-        lat: o.lat,
-        lon: o.lon,
-        km: o.km,
-        website: o.website || null,
-        osmId: o.osm_id || null,
-      }))
-    ),
+    accommodations: displayOptions(cluster, includeCamping).map(toStageOption),
+    passedAlong: passedAlong.flatMap((c) => displayOptions(c, includeCamping).map(toStageOption)),
   };
+}
+
+// A section's ends are town/place nodes; their beds can sit a couple of km
+// away (Vuokatti's hotels are 1-2 km short of the town node). Beds this
+// close to the start are "still at the start", not a first night's stop.
+const SECTION_END_RADIUS_KM = 3;
+
+/** Section mode's finish: the walk ends where the user chose, bed or no bed
+ * (a section walker may be heading home). A candidate cluster within
+ * SECTION_END_RADIUS_KM of the end is used as the finish so its options
+ * show; otherwise the last day ends at an empty "end of section" point. */
+function sectionFinish(pool, totalKm, reverse) {
+  const nearEnd = pool.filter((c) => c.km >= totalKm - SECTION_END_RADIUS_KM - 1e-9);
+  if (nearEnd.length > 0) return nearEnd[nearEnd.length - 1];
+  return { km: totalKm, realKm: reverse ? 0 : totalKm, options: [] };
 }
 
 /** Build a plan for an exact day count, or an error if that day count isn't
  * achievable with the current candidate pool. Returns maxStage/minStage/
- * stdDev alongside the stages so callers can judge how balanced it is. */
-function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse) {
+ * stdDev alongside the stages so callers can judge how balanced it is.
+ * finishAtEnd (section mode): the last day ends at totalKm - see
+ * sectionFinish - instead of at the last accommodation cluster. */
+function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse, finishAtEnd = false) {
   const pool = candidatePool(clusters, includeCamping);
-  if (pool.length === 0) {
+  if (pool.length === 0 && !finishAtEnd) {
     return { error: "No accommodation available on this trail with the current settings." };
   }
 
-  const finishCluster = pool[pool.length - 1];
-  const intermediates = pool.slice(0, -1);
+  let finishCluster;
+  let intermediates;
+  if (finishAtEnd) {
+    finishCluster = sectionFinish(pool, totalKm, reverse);
+    // A stop at (or within a town's width of) the start would be a ~0 km day.
+    intermediates = pool.filter(
+      (c) => c !== finishCluster && c.km > SECTION_END_RADIUS_KM && c.km < finishCluster.km - 1e-6
+    );
+  } else {
+    finishCluster = pool[pool.length - 1];
+    intermediates = pool.slice(0, -1);
+  }
   const maxFeasibleDays = intermediates.length + 1;
   if (days > maxFeasibleDays) {
     return {
@@ -272,11 +309,11 @@ function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, re
 /** Among nearby day counts, find the one with the best-balanced result
  * (smallest longest stage, tie-broken by smallest stdDev) - used only to
  * populate a suggestion note, never to override the requested day count. */
-function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays) {
+function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays, finishAtEnd) {
   const candidateDays = [days - 1, days + 1, days + 2].filter((d) => d >= 1 && d <= maxFeasibleDays && d !== days);
   let best = null;
   for (const d of candidateDays) {
-    const result = buildPlanForDays(clusters, walkRoute, totalKm, d, includeCamping, reverse);
+    const result = buildPlanForDays(clusters, walkRoute, totalKm, d, includeCamping, reverse, finishAtEnd);
     if (result.error) continue;
     const better =
       !best ||
@@ -294,9 +331,15 @@ function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCampin
  * @param {number} input.days
  * @param {"forward"|"reverse"} [input.direction]
  * @param {boolean} [input.includeCamping] - allow camp_site-only clusters as normal overnight stops
+ * @param {Object} [input.limits] - per-trail km/day limits; defaults are tuned for walking the WHW
+ * @param {number} [input.limits.maxAvgKm] - refuse plans averaging more than this per day
+ * @param {number} [input.limits.warnMaxKm] - flag (but still return) plans with a stage longer than this
+ * @param {boolean} [input.finishAtEnd] - end the last day at the route end even without accommodation there (section mode)
  * @returns {{days: Array<Object>, totalKm: number, direction: string, note?: string} | {error: string}}
  */
-function planTrip({ route, accommodations, days, direction = "forward", includeCamping = false }) {
+function planTrip({ route, accommodations, days, direction = "forward", includeCamping = false, limits = {}, finishAtEnd = false }) {
+  const maxAvgKm = limits.maxAvgKm ?? MAX_AVG_STAGE_KM;
+  const warnMaxKm = limits.warnMaxKm ?? STAGE_WARN_MAX_KM;
   if (!route || route.length < 2) {
     return { error: "Route data is missing or too short." };
   }
@@ -308,9 +351,12 @@ function planTrip({ route, accommodations, days, direction = "forward", includeC
   const reverse = direction === "reverse";
 
   const naiveAvg = totalKm / days;
-  if (naiveAvg > MAX_AVG_STAGE_KM || naiveAvg < MIN_AVG_STAGE_KM) {
-    const minDays = Math.ceil(totalKm / MAX_AVG_STAGE_KM);
+  if (naiveAvg > maxAvgKm || naiveAvg < MIN_AVG_STAGE_KM) {
+    const minDays = Math.ceil(totalKm / maxAvgKm);
     const maxDays = Math.floor(totalKm / MIN_AVG_STAGE_KM);
+    if (maxDays < 1) {
+      return { error: `At ${totalKm.toFixed(1)} km this is shorter than a single day's walk - pick a longer section.` };
+    }
     return {
       error:
         `${days} day(s) gives an average of ${naiveAvg.toFixed(1)} km/day, ` +
@@ -329,22 +375,108 @@ function planTrip({ route, accommodations, days, direction = "forward", includeC
     .map((c) => ({ realKm: c.km, km: reverse ? totalKm - c.km : c.km, options: c.options }))
     .sort((a, b) => a.km - b.km);
 
-  const plan = buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse);
+  const plan = buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse, finishAtEnd);
   if (plan.error) return plan;
 
-  const outOfRange = plan.maxStage > STAGE_WARN_MAX_KM + 1e-9 || plan.minStage < STAGE_WARN_MIN_KM - 1e-9;
+  const outOfRange = plan.maxStage > warnMaxKm + 1e-9 || plan.minStage < STAGE_WARN_MIN_KM - 1e-9;
   let note;
   if (outOfRange) {
     const maxFeasibleDays = candidatePool(clusters, includeCamping).length;
-    const suggestion = suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays);
+    const suggestion = suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays, finishAtEnd);
     const stageDesc =
-      plan.maxStage > STAGE_WARN_MAX_KM ? `a ${plan.maxStage.toFixed(1)} km stage` : `a ${plan.minStage.toFixed(1)} km stage`;
+      plan.maxStage > warnMaxKm ? `a ${plan.maxStage.toFixed(1)} km stage` : `a ${plan.minStage.toFixed(1)} km stage`;
     note = suggestion
       ? `This plan still has ${stageDesc} given how accommodation is spaced along the trail - ${suggestion.days} days would balance it better.`
       : `This plan still has ${stageDesc} given how accommodation is spaced along the trail.`;
   }
 
   return { days: plan.days, totalKm: round2(totalKm), direction, ...(note ? { note } : {}) };
+}
+
+/** Route vertex at an exact km, linearly interpolated between neighbours.
+ * A km that lands on an existing vertex returns that vertex as-is, so its
+ * elevation sample isn't lost to a neighbour that has none. */
+function pointAtKm(route, km) {
+  for (let i = 1; i < route.length; i++) {
+    const a = route[i - 1];
+    const b = route[i];
+    if (Math.abs(km - a.km) < 1e-9) return { ...a };
+    if (Math.abs(km - b.km) < 1e-9) return { ...b };
+    if (km < b.km) {
+      const t = b.km === a.km ? 0 : (km - a.km) / (b.km - a.km);
+      const p = { lat: a.lat + t * (b.lat - a.lat), lon: a.lon + t * (b.lon - a.lon), km };
+      if (typeof a.ele === "number" && typeof b.ele === "number") p.ele = a.ele + t * (b.ele - a.ele);
+      return p;
+    }
+  }
+  return { ...route[route.length - 1] };
+}
+
+/** The part of the route between loKm and hiKm (real trail km), with exact
+ * interpolated endpoints. */
+function sliceRoute(route, loKm, hiKm) {
+  const inner = route.filter((p) => p.km > loKm + 1e-9 && p.km < hiKm - 1e-9);
+  return [pointAtKm(route, loKm), ...inner, pointAtKm(route, hiKm)];
+}
+
+/**
+ * Section mode: plan a walk between two points on a long trail (fromKm ->
+ * toKm in real trail km; fromKm > toKm means walking the trail backwards).
+ *
+ * The section is cut out and treated as a trail of its own - km rebased to
+ * start at 0 - so planTrip's optimizer runs over only the clusters inside
+ * [start, end]. Unlike a fixed trail, the last day ends at the chosen end
+ * even with no bed there (finishAtEnd). Every km in the result is then
+ * shifted back to real trail km so the map and place labels line up with
+ * the full route.
+ *
+ * @returns same shape as planTrip, plus sectionFromKm / sectionToKm
+ */
+function planSection({ route, accommodations, fromKm, toKm, days, includeCamping = false, limits = {} }) {
+  if (!route || route.length < 2) {
+    return { error: "Route data is missing or too short." };
+  }
+  if (Math.abs(fromKm - toKm) < 1e-6) {
+    return { error: "Start and end are the same place - pick two different points." };
+  }
+  // A waypoint rounded past the end of the line (e.g. 886.0 vs 885.98) would
+  // otherwise produce a phantom negative-length first or last stage.
+  const routeEndKm = route[route.length - 1].km;
+  fromKm = Math.min(Math.max(fromKm, route[0].km), routeEndKm);
+  toKm = Math.min(Math.max(toKm, route[0].km), routeEndKm);
+
+  const lo = Math.min(fromKm, toKm);
+  const hi = Math.max(fromKm, toKm);
+  const sectionRoute = sliceRoute(route, lo, hi).map((p) => ({ ...p, km: p.km - lo }));
+  const sectionAccommodations = accommodations
+    .filter((a) => a.km >= lo - 1e-9 && a.km <= hi + 1e-9)
+    .map((a) => ({ ...a, km: a.km - lo }));
+
+  const plan = planTrip({
+    route: sectionRoute,
+    accommodations: sectionAccommodations,
+    days,
+    direction: fromKm > toKm ? "reverse" : "forward",
+    includeCamping,
+    limits,
+    finishAtEnd: true,
+  });
+  if (plan.error) return plan;
+
+  const toRealKm = (km) => round2(km + lo);
+  const shiftAcc = (acc) => ({ ...acc, km: acc.km + lo });
+  return {
+    ...plan,
+    sectionFromKm: fromKm,
+    sectionToKm: toKm,
+    days: plan.days.map((stage) => ({
+      ...stage,
+      fromRealKm: toRealKm(stage.fromRealKm),
+      endRealKm: toRealKm(stage.endRealKm),
+      accommodations: stage.accommodations.map(shiftAcc),
+      passedAlong: stage.passedAlong.map(shiftAcc),
+    })),
+  };
 }
 
 /** Add `days` (integer, may be negative) to an ISO date string, in UTC to avoid
@@ -413,9 +545,19 @@ function buildBookingUrl(placeName, checkinISO, checkoutISO, lat, lon) {
  *     and confirmed absent or just not filled in yet - treated the same,
  *     not logged - falls back to the property's own website when known.
  *
- * @returns {{url: string, linkType: "direct"|"website"|"search"}}
+ * @returns {{url: string, linkType: "direct"|"website"|"search"|"info"} | null} - null for a hut with no known page
  */
 function buildAccommodationLink(acc, bookingUrls, checkinISO, checkoutISO) {
+  // Huts are never on Booking.com. A free hut (autiotupa, laavu) is
+  // unbookable - just an info link (e.g. its luontoon.fi page) when known.
+  // A rental hut books on its own site. Neither gets a search fallback.
+  if (acc.tier === "free_hut") {
+    return acc.website ? { url: acc.website, linkType: "info" } : null;
+  }
+  if (acc.tier === "own_site") {
+    return acc.website ? { url: acc.website, linkType: "website" } : null;
+  }
+
   const searchFallback = () => ({
     url: buildBookingUrl(acc.name, checkinISO, checkoutISO, acc.lat, acc.lon),
     linkType: "search",
@@ -540,6 +682,80 @@ function selfTest() {
   });
   check("more days than candidate clusters fails gracefully", !!tooManyDaysForClusters.error);
 
+  // UKK hut tiers: an autiotupa (wilderness_hut) is a roofed stop; a laavu
+  // (shelter) needs your own gear, so it's a stop only with camping on.
+  const hutAccommodations = (midType, midTier) => [
+    { name: "Alpha Inn", type: "hotel", km: 9.8, lat: 56.01, lon: -4.99, off_route_m: 100 },
+    { name: "Mid Hut", type: midType, tier: midTier, km: 20.0, lat: 56.02, lon: -4.98, off_route_m: 50 },
+    { name: "Gamma Lodge", type: "hotel", km: 30, lat: 56.03, lon: -4.97, off_route_m: 0 },
+  ];
+  const withAutiotupa = planTrip({ route, accommodations: hutAccommodations("wilderness_hut", "free_hut"), days: 3 });
+  check(
+    "an autiotupa is a roofed stop without the camping toggle",
+    withAutiotupa.days && withAutiotupa.days.some((d) => d.accommodations.some((a) => a.name === "Mid Hut"))
+  );
+  check("a laavu is not a stop without the camping toggle", !!planTrip({ route, accommodations: hutAccommodations("shelter", "free_hut"), days: 3 }).error);
+  const withLaavu = planTrip({ route, accommodations: hutAccommodations("shelter", "free_hut"), days: 3, includeCamping: true });
+  check(
+    "a laavu is a stop with the camping toggle",
+    withLaavu.days && withLaavu.days.some((d) => d.accommodations.some((a) => a.name === "Mid Hut" && a.tier === "free_hut"))
+  );
+
+  const hutInfo = buildAccommodationLink({ name: "Hut", tier: "free_hut", website: "https://www.luontoon.fi/x" }, {}, "2026-08-01", "2026-08-02");
+  check("a free hut with a page gets a plain info link, not Booking.com", hutInfo && hutInfo.linkType === "info" && hutInfo.url === "https://www.luontoon.fi/x");
+  check("a free hut with no page gets no link at all", buildAccommodationLink({ name: "Hut", tier: "free_hut" }, {}, "2026-08-01", "2026-08-02") === null);
+  const rentalHut = buildAccommodationLink({ name: "Rental", tier: "own_site", website: "https://example.fi" }, {}, "2026-08-01", "2026-08-02");
+  check("a rental hut links to its own site", rentalHut && rentalHut.linkType === "website");
+  check("a rental hut with no site gets no Booking.com search", buildAccommodationLink({ name: "Rental", tier: "own_site" }, {}, "2026-08-01", "2026-08-02") === null);
+
+  // Section mode: only clusters inside [from, to] are used, and every km in
+  // the result is real trail km (not rebased to the section start).
+  const section = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 10, toKm: 40, days: 2 });
+  check("section plan succeeds", !section.error);
+  check("section day 1 starts at the section start in real km", section.days && section.days[0].fromRealKm === 10);
+  check("section ends at the chosen end, even with no bed there", section.days && section.days[1].endRealKm === 40);
+  check("a section ending with no bed shows no accommodation for the last day", section.days && section.days[1].accommodations.length === 0);
+  check(
+    "section never uses accommodation outside [from, to]",
+    section.days && !section.days.some((d) => [...d.accommodations, ...d.passedAlong].some((a) => a.name === "Final B"))
+  );
+  check("section distances are measured within the section", section.days && section.days[0].distanceKm === 5);
+  check("accommodation km stays real trail km", section.days && section.days[0].accommodations[0].km === 15);
+
+  const backwards = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 64, toKm: 10, days: 2 });
+  check("to < from walks the section backwards", !backwards.error && backwards.direction === "reverse");
+  check("backwards section starts at from", backwards.days && backwards.days[0].fromRealKm === 64);
+  check("backwards section ends at to", backwards.days && backwards.days[1].endRealKm === 10);
+  const nearStart = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 13, toKm: 40, days: 2 });
+  check(
+    "a bed within 3 km of the section start is never a night's stop",
+    nearStart.days && nearStart.days[0].endRealKm === 35 && !nearStart.days.some((d) => d.accommodations.some((a) => a.name === "Stranded Hotel"))
+  );
+  const endsAtBed = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 0, toKm: 35.5, days: 2 });
+  check("a stop within 3 km of the end is used as the finish", endsAtBed.days && endsAtBed.days[1].endRealKm === 35 && endsAtBed.days[1].accommodations.length === 1);
+
+  const samePlace = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 35, toKm: 35, days: 1 });
+  check("same start and end fails gracefully", !!samePlace.error);
+  const tooShort = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 30, toKm: 35, days: 1 });
+  check("section shorter than a day's walk fails with a clear message", tooShort.error && tooShort.error.includes("shorter"));
+  // Per-trail limits: the WHW defaults refuse a 60 km/day average, a trail
+  // configured for up to 60 km/day plans it without an over-long note.
+  const fastRoute = [];
+  for (let km = 0; km <= 120; km += 1) fastRoute.push({ lat: 64 + km * 0.001, lon: 28, km });
+  const fastAcc = [
+    { name: "Half Way", type: "hotel", km: 60, lat: 64.06, lon: 28, off_route_m: 0 },
+    { name: "Finish", type: "hotel", km: 120, lat: 64.12, lon: 28, off_route_m: 0 },
+  ];
+  check("default limits refuse 60 km/day", !!planTrip({ route: fastRoute, accommodations: fastAcc, days: 2 }).error);
+  const fast = planTrip({ route: fastRoute, accommodations: fastAcc, days: 2, limits: { maxAvgKm: 60, warnMaxKm: 60 } });
+  check("raised limits allow 60 km/day, unflagged", !fast.error && fast.days.length === 2 && !fast.note);
+
+  const pastEnd = planSection({ route: longRoute, accommodations: strandedAccommodations, fromKm: 65.04, toKm: 10, days: 2 });
+  check(
+    "a from/to rounded past the route end is clamped, never a negative stage",
+    pastEnd.days && pastEnd.days.every((d) => d.distanceKm > 0) && pastEnd.days[0].fromRealKm === 65
+  );
+
   const decodeCJ = (url) => {
     const prefix = `${CJ_CLICK_BASE}?url=`;
     if (!url.startsWith(prefix)) return null;
@@ -622,7 +838,7 @@ function selfTest() {
   return passed === results.length;
 }
 
-const Planner = { planTrip, buildBookingUrl, buildAccommodationLink, addDaysISO, clusterAccommodations, computeAscent, selfTest, CJ_CLICK_BASE };
+const Planner = { planTrip, planSection, sliceRoute, buildBookingUrl, buildAccommodationLink, addDaysISO, clusterAccommodations, computeAscent, selfTest, CJ_CLICK_BASE };
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = Planner;

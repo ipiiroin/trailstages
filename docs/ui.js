@@ -1,54 +1,66 @@
 /**
  * Wires up the controls, fetches trail data, and renders the itinerary
  * panel + map whenever an input changes. Trail-specific display metadata
- * (place names) lives here, not in planner.js.
+ * (place names, mode) comes from data/<trail>/trail.json, not planner.js.
+ *
+ * Which trail loads is picked by ?trail=<id> (default: West Highland Way).
+ * Two modes, set per trail in trail.json:
+ *   - "fixed":   walk the whole trail; direction toggle (WHW).
+ *   - "section": pick a start and end place, then days (UKK).
  */
 
-// Approximate km of named stops along the West Highland Way, in canonical
-// Milngavie(0) -> Fort William(~153) order. Used only to label stage
-// endpoints for display - the engine itself only deals in km and clusters.
-//
-// This list must cover every km value the segmentation engine can ever
-// return as a stage endpoint, for any day count (trail.json's min_days to
-// max_days), either direction, and with/without camping - otherwise
-// placeLabelForKm() falls back to a bare "km X" label instead of a place
-// name. Killearn/Balmaha/Cashel/Inversnaid/Crianlarich were missing (e.g.
-// a 6-day Milngavie->Fort William plan showed "Milngavie to km 30.4"
-// instead of "Milngavie to Balmaha") - verified by enumerating every
-// stage endpoint across days 4-11 x both directions x camping on/off and
-// checking each resolves to a real name, not just patching the one
-// reported case.
-const TRAIL_TOWNS = [
-  { name: "Milngavie", km: 0 },
-  { name: "Killearn", km: 12.5 },
-  { name: "Drymen", km: 19 },
-  { name: "Balmaha", km: 30.5 },
-  { name: "Cashel", km: 35.7 },
-  { name: "Rowardennan", km: 43 },
-  { name: "Inversnaid", km: 54.3 },
-  { name: "Inverarnan", km: 66 },
-  { name: "Crianlarich", km: 74.4 },
-  { name: "Tyndrum", km: 85 },
-  { name: "Inveroran", km: 98 },
-  { name: "Kingshouse", km: 115 },
-  { name: "Kinlochleven", km: 130 },
-  { name: "Fort William", km: 153 },
-];
+const DATA_ROOT = "data";
+const TRAIL_IDS = ["whw", "ukk"];
+const DEFAULT_TRAIL_ID = "whw";
 
 const TOWN_LABEL_TOLERANCE_KM = 6;
 const MAX_VISIBLE_ACCOMMODATIONS = 10;
 
+// Section mode: default day count is the section length at this daily
+// distance (the middle of the trail's km/day range would overshoot on
+// short sections of rough path).
+const SECTION_DEFAULT_KM_PER_DAY = 20;
+
+function selectedTrailId() {
+  const id = new URLSearchParams(window.location.search).get("trail");
+  return TRAIL_IDS.includes(id) ? id : DEFAULT_TRAIL_ID;
+}
+
+// Filled from trail.json on load. Must cover every km the engine can
+// return as a stage endpoint, or labels fall back to a bare "km X".
+let trailPlaces = [];
+// How close a km must be to a place to take its name. WHW uses the default;
+// the UKK sets 2 km, since its places are far apart and a laavu 5 km
+// short of a town is not "the town".
+let labelToleranceKm = TOWN_LABEL_TOLERANCE_KM;
+
 function placeLabelForKm(km) {
   let best = null;
   let bestDist = Infinity;
-  for (const town of TRAIL_TOWNS) {
+  for (const town of trailPlaces) {
+    // A town well off the trail (Nurmes, 6 km) never names a trail-side stop.
+    if ((town.off_route_km || 0) > labelToleranceKm) continue;
     const dist = Math.abs(town.km - km);
     if (dist < bestDist) {
       bestDist = dist;
       best = town;
     }
   }
-  return best && bestDist <= TOWN_LABEL_TOLERANCE_KM ? best.name : `km ${km.toFixed(1)}`;
+  return best && bestDist <= labelToleranceKm ? best.name : `km ${km.toFixed(1)}`;
+}
+
+/** A stage's end: the nearest named place, else (huts between towns on
+ * the UKK) the overnight stop's own name - or "laavu at km X" when that
+ * name is just generic ("Laavu", "Kota (unnamed)") - else a bare km. */
+function stageEndLabel(stage) {
+  const place = placeLabelForKm(stage.endRealKm);
+  if (!place.startsWith("km ")) return place;
+  const isGeneric = (a) =>
+    a.name.endsWith("(unnamed)") || (a.label && a.name.toLowerCase() === a.label.toLowerCase());
+  const named = stage.accommodations.find((a) => !isGeneric(a));
+  if (named) return named.name;
+  const first = stage.accommodations[0];
+  return first && first.label ? `${first.label} at km ${stage.endRealKm.toFixed(1)}` : place;
 }
 
 function formatDateLabel(isoDate) {
@@ -62,6 +74,7 @@ const LINK_LABELS = {
   direct: "Check availability",
   website: "Visit website",
   search: "Search area",
+  info: "Hut info", // free huts: a plain text link, not a booking button
 };
 
 const ICON_DISTANCE =
@@ -77,6 +90,10 @@ const ICON_ASCENT =
   "</svg>";
 
 function linkForAccommodation(stage, acc, startDate, bookingUrls) {
+  // Hut links (UKK free_hut / own_site) don't depend on dates.
+  if (acc.tier === "free_hut" || acc.tier === "own_site") {
+    return Planner.buildAccommodationLink(acc, bookingUrls, null, null);
+  }
   if (!startDate) return null;
   const checkin = Planner.addDaysISO(startDate, stage.day - 1);
   const checkout = Planner.addDaysISO(startDate, stage.day);
@@ -86,12 +103,12 @@ function linkForAccommodation(stage, acc, startDate, bookingUrls) {
 function renderAccommodationLi(stage, acc, startDate, bookingUrls) {
   const li = document.createElement("li");
   const link = linkForAccommodation(stage, acc, startDate, bookingUrls);
-  const typeLabel = acc.type ? acc.type.replace(/_/g, " ") : "";
+  const href = link ? safeHref(link.url) : null;
   li.innerHTML =
     `<span class="acc-name-block"><span class="acc-name">${escapeHtml(acc.name)}</span>` +
-    `<span class="acc-type">${escapeHtml(typeLabel)}</span></span>` +
-    (link
-      ? `<a href="${link.url}" class="acc-link acc-link-${link.linkType}" target="_blank" rel="noopener">${LINK_LABELS[link.linkType]}</a>`
+    `<span class="acc-type">${escapeHtml(accommodationTypeLabel(acc))}</span></span>` +
+    (href
+      ? `<a href="${href}" class="acc-link acc-link-${link.linkType}" target="_blank" rel="noopener">${LINK_LABELS[link.linkType]}</a>`
       : "");
   return li;
 }
@@ -101,6 +118,15 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
   const errorBox = document.getElementById("itinerary-error");
   panel.innerHTML = "";
 
+  // The note banner sits outside <ol id="itinerary-panel"> (as its previous
+  // sibling), so panel.innerHTML = "" above doesn't clear a stale one from
+  // the last render - always remove it first (even before an error), then
+  // re-add if still needed.
+  const prevNote = panel.previousElementSibling;
+  if (prevNote && prevNote.classList.contains("itinerary-note")) {
+    prevNote.remove();
+  }
+
   if (itinerary.error) {
     errorBox.textContent = itinerary.error;
     errorBox.hidden = false;
@@ -108,13 +134,6 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
   }
   errorBox.hidden = true;
 
-  // The note banner sits outside <ol id="itinerary-panel"> (as its previous
-  // sibling), so panel.innerHTML = "" above doesn't clear a stale one from
-  // the last render - always remove it first, then re-add if still needed.
-  const prevNote = panel.previousElementSibling;
-  if (prevNote && prevNote.classList.contains("itinerary-note")) {
-    prevNote.remove();
-  }
   if (itinerary.note) {
     const banner = document.createElement("p");
     banner.className = "itinerary-note";
@@ -122,6 +141,7 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
     panel.before(banner);
   }
 
+  let prevEndLabel = null;
   for (const stage of itinerary.days) {
     const li = document.createElement("li");
     li.className = "day-stage";
@@ -138,8 +158,12 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
     const card = document.createElement("div");
     card.className = "day-card";
 
-    const fromLabel = placeLabelForKm(stage.fromRealKm);
-    const toLabel = placeLabelForKm(stage.endRealKm);
+    // Each day starts where the previous one ended, so reuse its label.
+    // Section mode: the first and last labels are the places the user picked.
+    const isLastDay = stage.day === itinerary.days.length;
+    const fromLabel = prevEndLabel || itinerary.startLabel || placeLabelForKm(stage.fromRealKm);
+    const toLabel = (isLastDay && itinerary.endLabel) || stageEndLabel(stage);
+    prevEndLabel = toLabel;
     const dateLabel = startDate ? formatDateLabel(Planner.addDaysISO(startDate, stage.day - 1)) : null;
 
     const heading = document.createElement("h3");
@@ -171,6 +195,17 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
       list.appendChild(accLi);
     });
     card.appendChild(list);
+
+    // Section mode ends at the chosen place even with no bed there.
+    if (stage.accommodations.length === 0) {
+      const endNote = document.createElement("p");
+      endNote.className = "stage-end-note";
+      endNote.textContent =
+        stage.day === itinerary.days.length
+          ? "End of your section - no mapped overnight stop here."
+          : "No mapped overnight stop here.";
+      card.appendChild(endNote);
+    }
 
     if (overflowCount > 0) {
       const toggle = document.createElement("button");
@@ -209,6 +244,18 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
   }
 }
 
+/** "autiotupa" / "laavu" for UKK huts, else the OSM type made readable. */
+function accommodationTypeLabel(acc) {
+  if (acc.label) return acc.label;
+  return acc.type ? acc.type.replace(/_/g, " ") : "";
+}
+
+/** Links can come from free-text OSM website/url tags: only allow http(s),
+ * and escape for the attribute. Returns null for anything else. */
+function safeHref(url) {
+  return /^https?:\/\//i.test(url) ? escapeHtml(url) : null;
+}
+
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -228,9 +275,12 @@ const PROFILE_VIEWBOX_H = 120;
 const PROFILE_PAD_TOP = 14;
 const PROFILE_PAD_BOTTOM = 18;
 
-function buildTerrainPath(route, totalKm) {
-  const points = route.filter((p) => typeof p.ele === "number").slice().sort((a, b) => a.km - b.km);
-  if (points.length < 2) return null;
+function buildTerrainPath(route, loKm, hiKm) {
+  const spanKm = hiKm - loKm;
+  const points = route
+    .filter((p) => typeof p.ele === "number" && p.km >= loKm - 1e-9 && p.km <= hiKm + 1e-9)
+    .sort((a, b) => a.km - b.km);
+  if (points.length < 2 || spanKm <= 0) return null;
 
   const elevations = points.map((p) => p.ele);
   const minEle = Math.min(...elevations);
@@ -240,7 +290,7 @@ function buildTerrainPath(route, totalKm) {
   const baseline = PROFILE_VIEWBOX_H - PROFILE_PAD_BOTTOM;
 
   const coords = points.map((p) => [
-    (p.km / totalKm) * PROFILE_VIEWBOX_W,
+    ((p.km - loKm) / spanKm) * PROFILE_VIEWBOX_W,
     baseline - ((p.ele - minEle) / eleRange) * usableH,
   ]);
 
@@ -252,17 +302,23 @@ function buildTerrainPath(route, totalKm) {
   return { linePath, areaPath, baseline };
 }
 
-function renderRouteProfile(containerEl, route, totalKm, itinerary) {
-  const terrain = buildTerrainPath(route, totalKm);
+/** Profile of the route between loKm and hiKm (real km, canonical trail
+ * direction left to right). Hidden entirely when there's no elevation data
+ * for that stretch (e.g. UKK, north of SRTM coverage). */
+function renderRouteProfile(containerEl, scaleEl, route, loKm, hiKm, itinerary) {
+  const terrain = buildTerrainPath(route, loKm, hiKm);
+  scaleEl.hidden = !terrain;
   if (!terrain) {
     containerEl.innerHTML = "";
     return;
   }
+  document.getElementById("profile-start").textContent = placeLabelForKm(loKm);
+  document.getElementById("profile-end").textContent = placeLabelForKm(hiKm);
 
   let ticks = "";
   if (itinerary && !itinerary.error && itinerary.days) {
     for (const stage of itinerary.days) {
-      const x = ((stage.endRealKm / totalKm) * PROFILE_VIEWBOX_W).toFixed(1);
+      const x = (((stage.endRealKm - loKm) / (hiKm - loKm)) * PROFILE_VIEWBOX_W).toFixed(1);
       const color = TrailMap.DAY_COLORS[(stage.day - 1) % TrailMap.DAY_COLORS.length];
       ticks += `<line class="route-profile-tick" x1="${x}" y1="${PROFILE_PAD_TOP - 8}" x2="${x}" y2="${terrain.baseline}" stroke="${color}"></line>`;
     }
@@ -324,61 +380,191 @@ function defaultStartDate() {
   return today.toISOString().slice(0, 10);
 }
 
+function fetchJson(url) {
+  return fetch(url).then((r) => {
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    return r.json();
+  });
+}
+
+function clamp(n, lo, hi) {
+  return Math.min(Math.max(n, lo), hi);
+}
+
+/** Section mode: slider bounds follow the selected span at the trail's
+ * comfortable km/day range. */
+function sectionDayBounds(spanKm, trail) {
+  const min = Math.max(1, Math.ceil(spanKm / trail.max_km_per_day));
+  const max = Math.max(min, Math.floor(spanKm / trail.min_km_per_day));
+  return { min, max };
+}
+
+function placeOptionLabel(place) {
+  return `${place.name} (km ${Math.round(place.km)})`;
+}
+
+/** Honest note under the pickers when a chosen place isn't on the line
+ * itself - e.g. Nurmes town is ~6 km from where the trail passes it. */
+function offRouteHint(places) {
+  const far = places.filter((p) => p.off_route_km >= 1);
+  if (far.length === 0) return null;
+  return far.map((p) => `${p.name} centre is ${p.off_route_km.toFixed(1)} km from the trail.`).join(" ");
+}
+
 async function main() {
+  const trailId = selectedTrailId();
+  const base = `${DATA_ROOT}/${trailId}`;
   const [route, accommodations, trail, bookingUrls] = await Promise.all([
-    fetch("data/whw/route.json").then((r) => r.json()),
-    fetch("data/whw/accommodations.json").then((r) => r.json()),
-    fetch("data/whw/trail.json").then((r) => r.json()),
-    fetch("data/whw/booking_urls.json").then((r) => r.json()),
+    fetchJson(`${base}/route.json`),
+    fetchJson(`${base}/accommodations.json`),
+    fetchJson(`${base}/trail.json`),
+    fetchJson(`${base}/booking_urls.json`),
   ]);
+  const sectionMode = trail.mode === "section";
+  trailPlaces = trail.places || [];
+  labelToleranceKm = trail.label_tolerance_km ?? TOWN_LABEL_TOLERANCE_KM;
 
   TrailMap.init("map", route);
   setupViewTabs();
   document.getElementById("controls").addEventListener("submit", (e) => e.preventDefault());
 
+  const firstPlace = trailPlaces.length ? trailPlaces[0].name : "Start";
+  const lastPlace = trailPlaces.length ? trailPlaces[trailPlaces.length - 1].name : "Finish";
+  document.title = `Inn-to-Inn Planner — ${trail.name}`;
   document.querySelector(".app-header h1").textContent = `${trail.name} — Inn-to-Inn Planner`;
-  document.querySelector(".app-header .subtitle").textContent =
-    `Milngavie to Fort William, ~${Math.round(trail.total_km)} km. Pick your days, get a stage-by-stage itinerary that always ends at real accommodation.`;
+  document.querySelector(".app-header .subtitle").textContent = sectionMode
+    ? `${firstPlace} to ${lastPlace}, ~${Math.round(trail.total_km)} km. Pick the section you want to walk and your days, get a stage-by-stage itinerary.`
+    : `${firstPlace} to ${lastPlace}, ~${Math.round(trail.total_km)} km. Pick your days, get a stage-by-stage itinerary that always ends at real accommodation.`;
 
   const routeProfileEl = document.getElementById("route-profile");
+  const routeProfileScaleEl = document.getElementById("route-profile-scale");
 
   const daysSlider = document.getElementById("days-slider");
   const daysValue = document.getElementById("days-value");
   const directionSelect = document.getElementById("direction-select");
+  const fromSelect = document.getElementById("from-select");
+  const toSelect = document.getElementById("to-select");
+  const sectionHint = document.getElementById("section-hint");
   const startDateInput = document.getElementById("start-date");
   const includeCampingCheckbox = document.getElementById("include-camping");
 
-  daysSlider.min = String(trail.min_days);
-  daysSlider.max = String(trail.max_days);
-  daysSlider.value = String(Math.min(Math.max(Number(daysSlider.value), trail.min_days), trail.max_days));
+  document.getElementById("direction-control").hidden = sectionMode;
+  document.getElementById("section-control").hidden = !sectionMode;
 
   startDateInput.value = defaultStartDate();
+  includeCampingCheckbox.checked = Boolean(trail.default_include_camping);
+  if (trail.camping_label) {
+    document.getElementById("include-camping-label").textContent = trail.camping_label;
+  }
+
+  function selectedSection() {
+    return { from: trailPlaces[Number(fromSelect.value)], to: trailPlaces[Number(toSelect.value)] };
+  }
+
+  // Re-derive the days slider range for the chosen section, reset days to a
+  // sensible default for its length, and zoom the map to it.
+  function onSectionChange() {
+    const { from, to } = selectedSection();
+    const spanKm = Math.abs(to.km - from.km);
+    const bounds = sectionDayBounds(spanKm, trail);
+    daysSlider.min = String(bounds.min);
+    daysSlider.max = String(bounds.max);
+    daysSlider.value = String(clamp(Math.round(spanKm / SECTION_DEFAULT_KM_PER_DAY), bounds.min, bounds.max));
+
+    const hint = offRouteHint([from, to]);
+    sectionHint.textContent = hint || "";
+    sectionHint.hidden = !hint;
+
+    TrailMap.showSection(route, from.km, to.km, true);
+    update();
+  }
+
+  if (sectionMode) {
+    trailPlaces.forEach((place, index) => {
+      fromSelect.add(new Option(placeOptionLabel(place), String(index)));
+      toSelect.add(new Option(placeOptionLabel(place), String(index)));
+    });
+    const defaults = trail.default_section || {};
+    const indexOf = (name, fallback) => {
+      const i = trailPlaces.findIndex((p) => p.name === name);
+      return i >= 0 ? i : fallback;
+    };
+    fromSelect.value = String(indexOf(defaults.from, 0));
+    toSelect.value = String(indexOf(defaults.to, trailPlaces.length - 1));
+  } else {
+    daysSlider.min = String(trail.min_days);
+    daysSlider.max = String(trail.max_days);
+    daysSlider.value = String(clamp(Number(daysSlider.value), trail.min_days, trail.max_days));
+  }
+
+  function planCurrent(days, includeCamping) {
+    if (!sectionMode) {
+      return Planner.planTrip({ route, accommodations, days, direction: directionSelect.value, includeCamping });
+    }
+    const { from, to } = selectedSection();
+    const lo = Math.min(from.km, to.km);
+    const hi = Math.max(from.km, to.km);
+    // Accommodation is only mapped for part of a long trail so far; say so
+    // plainly instead of planning stages across unmapped country.
+    const [covLo, covHi] = trail.accommodation_coverage_km || [0, trail.total_km];
+    if (from !== to && (hi <= covLo || lo >= covHi)) {
+      return { error: `Route shown for ${from.name} to ${to.name} - overnight stops on this section are not mapped yet.` };
+    }
+    // The trail's own km/day ceiling replaces the WHW-tuned walking limits.
+    const limits = { maxAvgKm: trail.max_km_per_day, warnMaxKm: trail.max_km_per_day };
+    const plan = Planner.planSection({ route, accommodations, fromKm: from.km, toKm: to.km, days, includeCamping, limits });
+    if (!plan.error) {
+      plan.startLabel = from.name;
+      plan.endLabel = to.name;
+    }
+    if (!plan.error && (lo < covLo || hi > covHi)) {
+      const coverageNote =
+        `Overnight stops are only mapped for km ${covLo}-${covHi} of the trail so far; ` +
+        "the rest of this section has none in this plan.";
+      plan.note = plan.note ? `${coverageNote} ${plan.note}` : coverageNote;
+    }
+    return plan;
+  }
 
   function update() {
     const days = Number(daysSlider.value);
     daysValue.textContent = String(days);
-    const direction = directionSelect.value;
     const startDate = startDateInput.value || null;
     const includeCamping = includeCampingCheckbox.checked;
 
-    const itinerary = Planner.planTrip({ route, accommodations, days, direction, includeCamping });
+    const itinerary = planCurrent(days, includeCamping);
+
+    let loKm = 0;
+    let hiKm = trail.total_km;
+    if (sectionMode) {
+      const { from, to } = selectedSection();
+      loKm = Math.min(from.km, to.km);
+      hiKm = Math.max(from.km, to.km);
+    }
 
     renderItineraryPanel(itinerary, startDate, bookingUrls);
-    renderRouteProfile(routeProfileEl, route, trail.total_km, itinerary);
-
-    if (!itinerary.error) {
-      TrailMap.renderItinerary(itinerary, route, (stage, acc) => linkForAccommodation(stage, acc, startDate, bookingUrls));
-    }
+    renderRouteProfile(routeProfileEl, routeProfileScaleEl, route, loKm, hiKm, itinerary);
+    // An error clears the day segments too, so a stale plan never lingers on the map.
+    TrailMap.renderItinerary(
+      itinerary.error ? null : itinerary,
+      route,
+      (stage, acc) => linkForAccommodation(stage, acc, startDate, bookingUrls)
+    );
   }
 
   daysSlider.addEventListener("input", update);
   directionSelect.addEventListener("change", update);
+  fromSelect.addEventListener("change", onSectionChange);
+  toSelect.addEventListener("change", onSectionChange);
   startDateInput.addEventListener("change", update);
   includeCampingCheckbox.addEventListener("change", update);
 
-  update();
+  if (sectionMode) {
+    onSectionChange();
+  } else {
+    update();
+  }
 }
-
 main().catch((err) => {
   console.error(err);
   const errorBox = document.getElementById("itinerary-error");

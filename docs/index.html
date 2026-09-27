@@ -14,9 +14,9 @@
   <p class="subtitle">Milngavie to Fort William, ~154 km. Pick your days, get a stage-by-stage itinerary that always ends at real accommodation.</p>
 
   <div class="route-profile" id="route-profile" aria-hidden="true"></div>
-  <div class="route-profile-scale" aria-hidden="true">
-    <span>Milngavie</span>
-    <span>Fort William</span>
+  <div class="route-profile-scale" id="route-profile-scale" aria-hidden="true">
+    <span id="profile-start">Milngavie</span>
+    <span id="profile-end">Fort William</span>
   </div>
 </header>
 
@@ -26,12 +26,29 @@
     <input type="range" id="days-slider" min="3" max="11" value="6" step="1" />
   </div>
 
-  <div class="control">
+  <!-- Fixed-endpoint trails (WHW): walk the whole trail, pick a direction. -->
+  <div class="control" id="direction-control">
     <label for="direction-select">Direction</label>
     <select id="direction-select">
       <option value="forward">Milngavie → Fort William</option>
       <option value="reverse">Fort William → Milngavie</option>
     </select>
+  </div>
+
+  <!-- Section-mode trails (UKK): pick where to start and finish; picking
+       them the "wrong way round" walks the trail backwards. -->
+  <div class="control" id="section-control" hidden>
+    <div class="section-pickers">
+      <div class="control">
+        <label for="from-select">From</label>
+        <select id="from-select"></select>
+      </div>
+      <div class="control">
+        <label for="to-select">To</label>
+        <select id="to-select"></select>
+      </div>
+    </div>
+    <p class="control-hint" id="section-hint" hidden></p>
   </div>
 
   <div class="control">
@@ -41,7 +58,7 @@
 
   <label class="control control-checkbox" for="include-camping">
     <input type="checkbox" id="include-camping" />
-    <span>Include campsites (carrying a tent)</span>
+    <span id="include-camping-label">Include campsites (carrying a tent)</span>
   </label>
 </form>
 

@@ -195,6 +195,35 @@ summary:focus-visible {
   font-weight: 600;
 }
 
+/* .control's display:flex would otherwise override the hidden attribute. */
+.control[hidden],
+.control-hint[hidden],
+.route-profile-scale[hidden] {
+  display: none;
+}
+
+.section-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* Let long place names truncate inside the select instead of widening
+   the grid past a phone screen. */
+.section-pickers > .control {
+  min-width: 0;
+}
+
+.section-pickers select {
+  width: 100%;
+}
+
+.control-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
 .control-checkbox {
   flex-direction: row;
   align-items: center;
@@ -498,6 +527,21 @@ input[type="range"]::-moz-range-thumb {
   background: transparent;
   border-color: var(--ink);
   color: var(--ink);
+}
+
+/* Free huts can't be booked: an ordinary text link, not a button. */
+.acc-link.acc-link-info {
+  font-family: var(--font-body);
+  font-weight: 400;
+  text-decoration: underline;
+  color: var(--ink-soft);
+  padding: var(--space-2) 0;
+}
+
+.stage-end-note {
+  margin: var(--space-2) 0 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
 }
 
 @media (prefers-reduced-motion: no-preference) {

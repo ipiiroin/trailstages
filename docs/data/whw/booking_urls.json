@@ -29,7 +29,7 @@
   },
   "node/8968759441": {
     "booking_url": null,
-    "_comment": "Woodedge Bed and Breakfast Killearn (guest_house, km 12.5) - search: https://www.booking.com/searchresults.html?ss=Woodedge+Bed+and+Breakfast+Killearn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.039079&longitude=-4.3671076"
+    "_comment": "Woodedge Bed and Breakfast Killearn (guest_house, Killearn, km 12.5) - search: https://www.booking.com/searchresults.html?ss=Woodedge+Bed+and+Breakfast+Killearn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.039079&longitude=-4.3671076"
   },
   "node/11964712332": {
     "booking_url": null,
@@ -97,23 +97,23 @@
   },
   "node/10911559700": {
     "booking_url": "",
-    "_comment": "Arrochoile B&B (hostel, km 30.0) - search: https://www.booking.com/searchresults.html?ss=Arrochoile+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0834282&longitude=-4.5306443"
+    "_comment": "Arrochoile B&B (hostel, Balmaha, km 30.0) - search: https://www.booking.com/searchresults.html?ss=Arrochoile+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0834282&longitude=-4.5306443"
   },
   "way/251911356": {
     "booking_url": "https://www.booking.com/hotel/gb/oaktreeinn.fi.html",
-    "_comment": "The Oak Tree Inn (guest_house, km 30.5) - search: https://www.booking.com/searchresults.html?ss=The+Oak+Tree+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0840733&longitude=-4.5399111"
+    "_comment": "The Oak Tree Inn (guest_house, Balmaha, km 30.5) - search: https://www.booking.com/searchresults.html?ss=The+Oak+Tree+Inn&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0840733&longitude=-4.5399111"
   },
   "node/11201687137": {
     "booking_url": "https://www.booking.com/hotel/gb/balmaha-lodge-1.html",
-    "_comment": "Balmaha Lodges (apartment, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Balmaha+Lodges&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0849648&longitude=-4.5406887"
+    "_comment": "Balmaha Lodges (apartment, Balmaha, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Balmaha+Lodges&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0849648&longitude=-4.5406887"
   },
   "way/277825090": {
     "booking_url": "",
-    "_comment": "Balmaha Cottage (guest_house, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Balmaha+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.084573&longitude=-4.5407738"
+    "_comment": "Balmaha Cottage (guest_house, Balmaha, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Balmaha+Cottage&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.084573&longitude=-4.5407738"
   },
   "way/277825092": {
     "booking_url": "",
-    "_comment": "Bay Cottage B&B (guest_house, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Bay+Cottage+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0845101&longitude=-4.540579"
+    "_comment": "Bay Cottage B&B (guest_house, Balmaha, km 30.6) - search: https://www.booking.com/searchresults.html?ss=Bay+Cottage+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.0845101&longitude=-4.540579"
   },
   "node/2327987339": {
     "booking_url": null,
@@ -137,15 +137,15 @@
   },
   "way/85070370": {
     "booking_url": "https://www.booking.com/hotel/gb/inversnaid-bunkhouse.fi.html",
-    "_comment": "Inversnaid Bunkhouse (hotel, km 54.2) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Bunkhouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2463013&longitude=-4.671482"
+    "_comment": "Inversnaid Bunkhouse (hotel, Inversnaid, km 54.2) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Bunkhouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2463013&longitude=-4.671482"
   },
   "node/969339263": {
     "booking_url": "",
-    "_comment": "Inversnaid Lodge (guest_house, km 54.2) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2439148&longitude=-4.6810152"
+    "_comment": "Inversnaid Lodge (guest_house, Inversnaid, km 54.2) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2439148&longitude=-4.6810152"
   },
   "node/969339260": {
     "booking_url": null,
-    "_comment": "Inversnaid Hotel (hotel, km 54.3) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2431353&longitude=-4.6844475"
+    "_comment": "Inversnaid Hotel (hotel, Inversnaid, km 54.3) - search: https://www.booking.com/searchresults.html?ss=Inversnaid+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.2431353&longitude=-4.6844475"
   },
   "node/4896947694": {
     "booking_url": null,
@@ -165,35 +165,35 @@
   },
   "node/3074867911": {
     "booking_url": null,
-    "_comment": "Hillview Guesthouse (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Hillview+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3894012&longitude=-4.6187915"
+    "_comment": "Hillview Guesthouse (guest_house, Crianlarich, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Hillview+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3894012&longitude=-4.6187915"
   },
   "node/5111810533": {
     "booking_url": "",
-    "_comment": "Glenadran House (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Glenadran+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3920399&longitude=-4.6140043"
+    "_comment": "Glenadran House (guest_house, Crianlarich, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Glenadran+House&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3920399&longitude=-4.6140043"
   },
   "way/191047716": {
     "booking_url": null,
-    "_comment": "Crianlarich Youth Hostel (hostel, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Crianlarich+Youth+Hostel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3914247&longitude=-4.6164906"
+    "_comment": "Crianlarich Youth Hostel (hostel, Crianlarich, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Crianlarich+Youth+Hostel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3914247&longitude=-4.6164906"
   },
   "way/292984635": {
     "booking_url": null,
-    "_comment": "Craigbank Guesthouse (guest_house, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Craigbank+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3919945&longitude=-4.6143078"
+    "_comment": "Craigbank Guesthouse (guest_house, Crianlarich, km 74.3) - search: https://www.booking.com/searchresults.html?ss=Craigbank+Guesthouse&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3919945&longitude=-4.6143078"
   },
   "node/392622933": {
     "booking_url": "https://www.booking.com/hotel/gb/the-crianlarich.html",
-    "_comment": "The Crianlarich Hotel (hotel, km 74.5) - search: https://www.booking.com/searchresults.html?ss=The+Crianlarich+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3930756&longitude=-4.6193579"
+    "_comment": "The Crianlarich Hotel (hotel, Crianlarich, km 74.5) - search: https://www.booking.com/searchresults.html?ss=The+Crianlarich+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3930756&longitude=-4.6193579"
   },
   "node/6704067330": {
     "booking_url": "",
-    "_comment": "The Crianlarich Hotel (hotel, km 74.5) - search: https://www.booking.com/searchresults.html?ss=The+Crianlarich+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931682&longitude=-4.6196267"
+    "_comment": "The Crianlarich Hotel (hotel, Crianlarich, km 74.5) - search: https://www.booking.com/searchresults.html?ss=The+Crianlarich+Hotel&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931682&longitude=-4.6196267"
   },
   "node/12893600097": {
     "booking_url": "https://www.booking.com/hotel/gb/glenbruar-house-crianlarich.html",
-    "_comment": "Glenbruar B&B (guest_house, km 74.5) - search: https://www.booking.com/searchresults.html?ss=Glenbruar+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931194&longitude=-4.6186726"
+    "_comment": "Glenbruar B&B (guest_house, Crianlarich, km 74.5) - search: https://www.booking.com/searchresults.html?ss=Glenbruar+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.3931194&longitude=-4.6186726"
   },
   "node/3101842570": {
     "booking_url": "https://www.booking.com/hotel/gb/ewich-house.html",
-    "_comment": "Ewich Guest House  Bed & Breakfast (guest_house, km 77.5) - search: https://www.booking.com/searchresults.html?ss=Ewich+Guest+House++Bed+%26+Breakfast&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4101744&longitude=-4.655317"
+    "_comment": "Ewich Guest House  Bed & Breakfast (guest_house, Crianlarich, km 77.5) - search: https://www.booking.com/searchresults.html?ss=Ewich+Guest+House++Bed+%26+Breakfast&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.4101744&longitude=-4.655317"
   },
   "node/1749662809": {
     "booking_url": "",
@@ -281,7 +281,7 @@
   },
   "node/4170341193": {
     "booking_url": "",
-    "_comment": "F\u00e0ilte B&B (guest_house, Kinlochleven, km 128.2) - search: https://www.booking.com/searchresults.html?ss=F%C3%A0ilte+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7159536&longitude=-4.9573054"
+    "_comment": "Fàilte B&B (guest_house, Kinlochleven, km 128.2) - search: https://www.booking.com/searchresults.html?ss=F%C3%A0ilte+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.7159536&longitude=-4.9573054"
   },
   "way/94129740": {
     "booking_url": "https://www.booking.com/hotel/gb/blackwater-hostel-kinlochleven.html",
@@ -441,7 +441,7 @@
   },
   "node/4171916389": {
     "booking_url": null,
-    "_comment": "Caberfeidh n\u00b01 B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Caberfeidh+n%C2%B01+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8180126&longitude=-5.1082532"
+    "_comment": "Caberfeidh n°1 B&B (guest_house, Fort William, km 152.7) - search: https://www.booking.com/searchresults.html?ss=Caberfeidh+n%C2%B01+B%26B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=56.8180126&longitude=-5.1082532"
   },
   "node/4172611892": {
     "booking_url": null,

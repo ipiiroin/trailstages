@@ -24,6 +24,16 @@ projected onto it) that isn't part of this repo. The segmentation engine
 no knowledge of place names, so it isn't tied to this one trail; a second
 trail just needs a second `data/<trail>/` directory of pre-baked JSON.
 
+## Experimental: UKK-reitti
+
+[trailstages.com/?trail=ukk](https://trailstages.com/?trail=ukk) loads a
+second trail as an engineering exercise: Finland's UKK-reitti, Koli →
+Tulppio (~886 km). Instead of fixed endpoints you pick a section (From / To)
+and then days. Overnight stops are mapped only for the southern section
+(Koli → Vuokatti, km 0–210) so far, and include free wilderness huts and
+lean-to shelters (laavu) alongside hotels. There is no elevation data for
+this trail. Expect rough edges.
+
 ## Running the web app locally
 
 Serve `docs/` over HTTP — opening `index.html` directly via `file://` will

@@ -1,0 +1,78 @@
+{
+  "node/641364317": {
+    "booking_url": "",
+    "_comment": "Paimentupa (guest_house, Koli, km 0.0) - search: https://www.booking.com/searchresults.html?ss=Paimentupa&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0874532&longitude=29.7903087"
+  },
+  "node/4416615889": {
+    "booking_url": "",
+    "_comment": "Sokos Hotel Koli (hotel, Koli, km 0.0) - search: https://www.booking.com/searchresults.html?ss=Sokos+Hotel+Koli&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0962549&longitude=29.8059531"
+  },
+  "way/167079816": {
+    "booking_url": "",
+    "_comment": "Break Sokos Hotel Koli (hotel, Koli, km 0.1) - search: https://www.booking.com/searchresults.html?ss=Break+Sokos+Hotel+Koli&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0967079&longitude=29.805247"
+  },
+  "node/1395211066": {
+    "booking_url": "",
+    "_comment": "Mattila (Elon tila) (guest_house, Koli, km 1.6) - search: https://www.booking.com/searchresults.html?ss=Mattila+%28Elon+tila%29&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1082532&longitude=29.7918654"
+  },
+  "node/3581076958": {
+    "booking_url": "",
+    "_comment": "Kolin Ryynäsen Luhtiaittahuoneet (guest_house, Koli, km 3.2) - search: https://www.booking.com/searchresults.html?ss=Kolin+Ryyn%C3%A4sen+Luhtiaittahuoneet&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1130429&longitude=29.7774527"
+  },
+  "node/11081245477": {
+    "booking_url": "",
+    "_comment": "Break Sokos Hotel Koli Kylä (hotel, Koli, km 3.2) - search: https://www.booking.com/searchresults.html?ss=Break+Sokos+Hotel+Koli+Kyl%C3%A4&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1142295&longitude=29.7754195"
+  },
+  "node/11081343573": {
+    "booking_url": "",
+    "_comment": "Patikoijan Pirtti (apartment, Koli, km 3.2) - search: https://www.booking.com/searchresults.html?ss=Patikoijan+Pirtti&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1135398&longitude=29.7783138"
+  },
+  "node/1395211217": {
+    "booking_url": "",
+    "_comment": "Linta mökit (chalet, km 8.4) - search: https://www.booking.com/searchresults.html?ss=Linta+m%C3%B6kit&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.101835&longitude=29.6928701"
+  },
+  "node/3059763610": {
+    "booking_url": "",
+    "_comment": "Karku (hotel, Juuka, km 45.0) - search: https://www.booking.com/searchresults.html?ss=Karku&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.2400395&longitude=29.2524143"
+  },
+  "node/4323396287": {
+    "booking_url": "",
+    "_comment": "Pihlajapuu (guest_house, km 86.0) - search: https://www.booking.com/searchresults.html?ss=Pihlajapuu&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.4751029&longitude=28.9985074"
+  },
+  "way/705175836": {
+    "booking_url": "",
+    "_comment": "Aronsalmen Lomamökit (chalet, km 87.6) - search: https://www.booking.com/searchresults.html?ss=Aronsalmen+Lomam%C3%B6kit&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.4761361&longitude=29.0341984"
+  },
+  "node/2199153508": {
+    "booking_url": "",
+    "_comment": "Hotel Aateli Lakeside (hotel, Vuokatti, km 201.2) - search: https://www.booking.com/searchresults.html?ss=Hotel+Aateli+Lakeside&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1369253&longitude=28.2531125"
+  },
+  "node/7768089067": {
+    "booking_url": "",
+    "_comment": "Hotelli Vuokatinranta (hotel, Vuokatti, km 201.6) - search: https://www.booking.com/searchresults.html?ss=Hotelli+Vuokatinranta&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1388606&longitude=28.2570242"
+  },
+  "node/11619375421": {
+    "booking_url": "",
+    "_comment": "Hotel Aateli Hillside (hotel, Vuokatti, km 202.1) - search: https://www.booking.com/searchresults.html?ss=Hotel+Aateli+Hillside&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1348578&longitude=28.2713655"
+  },
+  "node/13030233972": {
+    "booking_url": "",
+    "_comment": "Aateli Royal (hotel, Vuokatti, km 202.1) - search: https://www.booking.com/searchresults.html?ss=Aateli+Royal&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1345435&longitude=28.2727883"
+  },
+  "node/254653882": {
+    "booking_url": "",
+    "_comment": "Break Sokos Hotel Vuokatti (hotel, Vuokatti, km 202.5) - search: https://www.booking.com/searchresults.html?ss=Break+Sokos+Hotel+Vuokatti&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1409366&longitude=28.2946149"
+  },
+  "way/367140227": {
+    "booking_url": "",
+    "_comment": "Vuokatinhovi (hotel, Vuokatti, km 202.5) - search: https://www.booking.com/searchresults.html?ss=Vuokatinhovi&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1368359&longitude=28.3018455"
+  },
+  "way/664890428": {
+    "booking_url": "",
+    "_comment": "Käenpesä (chalet, Vuokatti, km 203.8) - search: https://www.booking.com/searchresults.html?ss=K%C3%A4enpes%C3%A4&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.145843&longitude=28.2628647"
+  },
+  "node/981494517": {
+    "booking_url": "",
+    "_comment": "Holiday Club Katinkulta (hotel, Vuokatti, km 204.6) - search: https://www.booking.com/searchresults.html?ss=Holiday+Club+Katinkulta&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.14858&longitude=28.2352678"
+  }
+}
