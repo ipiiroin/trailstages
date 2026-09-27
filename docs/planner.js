@@ -199,15 +199,6 @@ function findBestPartition(points, totalStages) {
 // the most balanced plan's longest day if that buys a roof for the night.
 const ROOF_STRETCH_FACTOR = 1.25;
 
-/** Lexicographically compare two equal-length cost tuples. */
-function tupleLess(a, b) {
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] < b[i] - 1e-9) return true;
-    if (a[i] > b[i] + 1e-9) return false;
-  }
-  return false;
-}
-
 /**
  * Cheapest way along `points` from the first to the last using only steps
  * no longer than maxStepKm. Each step costs [days, campNights, length^2],
@@ -216,45 +207,81 @@ function tupleLess(a, b) {
  * then fewer days wins first). useCamp: count nights at camping-only stops.
  * allowGapHops: a step between two neighbouring points is always allowed,
  * however long - the only way across a gap with no stop at all.
+ *
+ * Runs on every slider move over up to ~200 stops x ~90 days, so costs live
+ * in flat arrays with parent pointers (no per-step array copies), and only
+ * steps within reach (points are sorted) are tried.
+ * Returns { cost: [days, camp, sumSq], path: [point indices] } or null.
  */
 function cheapestPath(points, isCampNight, maxStepKm, stages, useCamp, allowGapHops = false) {
-  const last = points.length - 1;
-  const stepCost = (i, j) => {
-    const len = points[j] - points[i];
-    return [1, useCamp && isCampNight[j] ? 1 : 0, len * len];
-  };
-  const add = (a, b) => a.map((x, k) => x + b[k]);
-  const tooLong = (i, j) => points[j] - points[i] > maxStepKm + 1e-6 && !(allowGapHops && j === i + 1);
-
-  // Layer k = "after k steps"; with floating stages, one layer suffices.
+  const n = points.length;
+  const last = n - 1;
   const layers = stages == null ? 1 : stages;
-  let prev = new Array(points.length).fill(null);
-  prev[0] = { cost: [0, 0, 0], path: [0] };
-  if (stages == null) {
-    for (let j = 1; j <= last; j++) {
-      for (let i = 0; i < j; i++) {
-        if (!prev[i] || tooLong(i, j)) continue;
-        const cost = add(prev[i].cost, stepCost(i, j));
-        if (!prev[j] || tupleLess(cost, prev[j].cost)) prev[j] = { cost, path: [...prev[i].path, j] };
-      }
-    }
-    return prev[last];
-  }
-  for (let k = 1; k <= layers; k++) {
-    const next = new Array(points.length).fill(null);
-    const ends = k === layers ? [last] : rangeInclusive(1, last - 1);
-    for (const j of ends) {
-      for (let i = 0; i < j; i++) {
-        if (!prev[i] || tooLong(i, j)) continue;
-        const cost = add(prev[i].cost, stepCost(i, j));
-        if (!next[j] || tupleLess(cost, next[j].cost)) next[j] = { cost, path: [...prev[i].path, j] };
-      }
-    }
-    prev = next;
-  }
-  return prev[last];
-}
 
+  // Per layer: cost components and the parent point index (-1 = unreached).
+  const makeLayer = () => ({
+    days: new Float64Array(n).fill(Infinity),
+    camp: new Float64Array(n),
+    sq: new Float64Array(n),
+    parent: new Int32Array(n).fill(-1),
+  });
+  const better = (d, c, q, L, j) =>
+    d < L.days[j] - 1e-9 ||
+    (Math.abs(d - L.days[j]) <= 1e-9 && (c < L.camp[j] - 1e-9 || (Math.abs(c - L.camp[j]) <= 1e-9 && q < L.sq[j] - 1e-9)));
+
+  // relax(from, to, j): try every step i -> j that is within reach.
+  const relax = (from, to, j) => {
+    let i = j - 1;
+    while (i > 0 && points[j] - points[i - 1] <= maxStepKm + 1e-6) i--;
+    const firstInReach = points[j] - points[i] <= maxStepKm + 1e-6 ? i : j;
+    const tryStep = (k) => {
+      if (from.days[k] === Infinity) return;
+      const len = points[j] - points[k];
+      const d = from.days[k] + 1;
+      const c = from.camp[k] + (useCamp && isCampNight[j] ? 1 : 0);
+      const q = from.sq[k] + len * len;
+      if (to.days[j] === Infinity || better(d, c, q, to, j)) {
+        to.days[j] = d;
+        to.camp[j] = c;
+        to.sq[j] = q;
+        to.parent[j] = k;
+      }
+    };
+    for (let k = firstInReach; k < j; k++) tryStep(k);
+    if (allowGapHops && firstInReach === j) tryStep(j - 1);
+  };
+
+  const start = makeLayer();
+  start.days[0] = 0;
+  const history = [start];
+  if (stages == null) {
+    // One layer: a point's best cost only depends on earlier points.
+    for (let j = 1; j <= last; j++) relax(start, start, j);
+  } else {
+    for (let k = 1; k <= layers; k++) {
+      const next = makeLayer();
+      const prevLayer = history[k - 1];
+      if (k === layers) relax(prevLayer, next, last);
+      else for (let j = 1; j < last; j++) relax(prevLayer, next, j);
+      history.push(next);
+    }
+  }
+
+  const final = history[history.length - 1];
+  if (final.days[last] === Infinity) return null;
+  const path = [last];
+  if (stages == null) {
+    for (let j = last; j !== 0; j = start.parent[j]) path.push(start.parent[j]);
+  } else {
+    let j = last;
+    for (let k = layers; k > 0; k--) {
+      j = history[k].parent[j];
+      path.push(j);
+    }
+  }
+  path.reverse();
+  return { cost: [final.days[last], final.camp[last], final.sq[last]], path };
+}
 /** Smallest step length (from the candidates) for which ok(step) holds;
  * ok must be monotone (false ... false true ... true). */
 function smallestStep(candidates, ok) {

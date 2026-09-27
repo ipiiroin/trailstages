@@ -98,5 +98,173 @@
   "node/981494517": {
     "booking_url": "",
     "_comment": "Holiday Club Katinkulta (hotel, Vuokatti, km 204.6) - search: https://www.booking.com/searchresults.html?ss=Holiday+Club+Katinkulta&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.14858&longitude=28.2352678"
+  },
+  "node/5352121323": {
+    "booking_url": "",
+    "_comment": "Ukkohalla (apartment, km 313.8) - search: https://www.booking.com/searchresults.html?ss=Ukkohalla&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.7402931&longitude=28.2455645"
+  },
+  "node/4288374395": {
+    "booking_url": "",
+    "_comment": "Дом в фін (guest_house, km 317.4) - search: https://www.booking.com/searchresults.html?ss=%D0%94%D0%BE%D0%BC+%D0%B2+%D1%84%D1%96%D0%BD&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.7483817&longitude=28.2518912"
+  },
+  "way/496269871": {
+    "booking_url": "",
+    "_comment": "Villa PytkynUkko (chalet, km 457.7) - search: https://www.booking.com/searchresults.html?ss=Villa+PytkynUkko&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.5860726&longitude=27.6110765"
+  },
+  "way/34235688": {
+    "booking_url": "",
+    "_comment": "Hotelli Pikku-Syöte (hotel, Iso-Syöte, km 462.5) - search: https://www.booking.com/searchresults.html?ss=Hotelli+Pikku-Sy%C3%B6te&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6299254&longitude=27.697434"
+  },
+  "way/34236622": {
+    "booking_url": "",
+    "_comment": "Retkeilymaja Syöte (hostel, Iso-Syöte, km 462.5) - search: https://www.booking.com/searchresults.html?ss=Retkeilymaja+Sy%C3%B6te&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6335757&longitude=27.700933"
+  },
+  "way/229502684": {
+    "booking_url": "",
+    "_comment": "Alarinteentie 1 (chalet, Iso-Syöte, km 462.5) - search: https://www.booking.com/searchresults.html?ss=Alarinteentie+1&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.632039&longitude=27.6955956"
+  },
+  "way/1446456086": {
+    "booking_url": "",
+    "_comment": "Kuurankukka (chalet, Iso-Syöte, km 462.5) - search: https://www.booking.com/searchresults.html?ss=Kuurankukka&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6254033&longitude=27.657697"
+  },
+  "way/1451744871": {
+    "booking_url": "",
+    "_comment": "Peukaloinen (chalet, Iso-Syöte, km 462.7) - search: https://www.booking.com/searchresults.html?ss=Peukaloinen&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6209203&longitude=27.6196569"
+  },
+  "way/837586088": {
+    "booking_url": "",
+    "_comment": "KIDE Hotel by Iso-Syöte (hotel, Iso-Syöte, km 463.2) - search: https://www.booking.com/searchresults.html?ss=KIDE+Hotel+by+Iso-Sy%C3%B6te&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6266121&longitude=27.6306831"
+  },
+  "node/4880444993": {
+    "booking_url": "",
+    "_comment": "Eagle View Suite (hotel, Iso-Syöte, km 464.0) - search: https://www.booking.com/searchresults.html?ss=Eagle+View+Suite&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6239032&longitude=27.6095661"
+  },
+  "way/656733938": {
+    "booking_url": "",
+    "_comment": "Hotelli Iso-Syöte (hotel, Iso-Syöte, km 464.0) - search: https://www.booking.com/searchresults.html?ss=Hotelli+Iso-Sy%C3%B6te&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=65.6243094&longitude=27.6092005"
+  },
+  "node/8282874621": {
+    "booking_url": "",
+    "_comment": "Naali Lodge (hotel, km 536.2) - search: https://www.booking.com/searchresults.html?ss=Naali+Lodge&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.0483228&longitude=27.9618626"
+  },
+  "way/151110264": {
+    "booking_url": "",
+    "_comment": "Lapin Satu (hotel, Posio, km 545.5) - search: https://www.booking.com/searchresults.html?ss=Lapin+Satu&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.0959311&longitude=28.1350057"
+  },
+  "way/150542850": {
+    "booking_url": "",
+    "_comment": "Hotelli Posio (hotel, Posio, km 548.0) - search: https://www.booking.com/searchresults.html?ss=Hotelli+Posio&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.110347&longitude=28.1705526"
+  },
+  "way/152259797": {
+    "booking_url": "",
+    "_comment": "Kirikeskus (hotel, km 553.9) - search: https://www.booking.com/searchresults.html?ss=Kirikeskus&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.1087084&longitude=28.2890494"
+  },
+  "way/1465664219": {
+    "booking_url": "",
+    "_comment": "Eräjunni (chalet, km 594.5) - search: https://www.booking.com/searchresults.html?ss=Er%C3%A4junni&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2697937&longitude=28.7563879"
+  },
+  "node/10672616967": {
+    "booking_url": "",
+    "_comment": "Kuukkelisalmi (chalet, km 613.3) - search: https://www.booking.com/searchresults.html?ss=Kuukkelisalmi&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.1889075&longitude=29.1341548"
+  },
+  "node/10672746771": {
+    "booking_url": "",
+    "_comment": "Villa Jalosalmi (chalet, km 613.3) - search: https://www.booking.com/searchresults.html?ss=Villa+Jalosalmi&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.1851362&longitude=29.1330053"
+  },
+  "node/10672869992": {
+    "booking_url": "",
+    "_comment": "Villa Loimukettu (chalet, km 613.3) - search: https://www.booking.com/searchresults.html?ss=Villa+Loimukettu&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.1845469&longitude=29.1315579"
+  },
+  "way/1356366110": {
+    "booking_url": "",
+    "_comment": "Villa Lamminkaita (chalet, km 613.3) - search: https://www.booking.com/searchresults.html?ss=Villa+Lamminkaita&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.1881412&longitude=29.1323763"
+  },
+  "way/1453375034": {
+    "booking_url": "",
+    "_comment": "Kantohilla (chalet, km 614.3) - search: https://www.booking.com/searchresults.html?ss=Kantohilla&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.224373&longitude=29.1607602"
+  },
+  "node/10672869996": {
+    "booking_url": "",
+    "_comment": "Riekonkieppi (chalet, km 614.4) - search: https://www.booking.com/searchresults.html?ss=Riekonkieppi&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2266646&longitude=29.1630977"
+  },
+  "node/10672869995": {
+    "booking_url": "",
+    "_comment": "Teerenkieppi (chalet, km 614.7) - search: https://www.booking.com/searchresults.html?ss=Teerenkieppi&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2293818&longitude=29.1670727"
+  },
+  "way/1453331609": {
+    "booking_url": "",
+    "_comment": "Honkaranta (chalet, km 615.7) - search: https://www.booking.com/searchresults.html?ss=Honkaranta&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2452931&longitude=29.1786205"
+  },
+  "node/12199976341": {
+    "booking_url": "",
+    "_comment": "Ajakan Taika (hotel, Käylä, km 617.9) - search: https://www.booking.com/searchresults.html?ss=Ajakan+Taika&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2611126&longitude=29.253931"
+  },
+  "node/2388691765": {
+    "booking_url": "",
+    "_comment": "Kitkajoen Harjustuvat 32A (chalet, Käylä, km 622.2) - search: https://www.booking.com/searchresults.html?ss=Kitkajoen+Harjustuvat+32A&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.3000237&longitude=29.2026746"
+  },
+  "node/2389000263": {
+    "booking_url": "",
+    "_comment": "Kitkajoen Harjustuvat 32C (chalet, Käylä, km 622.2) - search: https://www.booking.com/searchresults.html?ss=Kitkajoen+Harjustuvat+32C&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.3003675&longitude=29.2055183"
+  },
+  "node/2393655024": {
+    "booking_url": "",
+    "_comment": "Kitkajoen Harjustuvat 30B (chalet, Käylä, km 622.2) - search: https://www.booking.com/searchresults.html?ss=Kitkajoen+Harjustuvat+30B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.2989756&longitude=29.2084364"
+  },
+  "way/1167486905": {
+    "booking_url": "",
+    "_comment": "Kitkajoen Harjustupa 32 E (chalet, Käylä, km 622.2) - search: https://www.booking.com/searchresults.html?ss=Kitkajoen+Harjustupa+32+E&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.300432&longitude=29.2078579"
+  },
+  "node/2388691796": {
+    "booking_url": "",
+    "_comment": "Kitkajoen Harjustuvat 32G (chalet, Käylä, km 622.8) - search: https://www.booking.com/searchresults.html?ss=Kitkajoen+Harjustuvat+32G&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.3007999&longitude=29.209466"
+  },
+  "node/1077243764": {
+    "booking_url": "",
+    "_comment": "Pan Village Oulanka (chalet, Sallatunturi, km 692.4) - search: https://www.booking.com/searchresults.html?ss=Pan+Village+Oulanka&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7402581&longitude=28.8203056"
+  },
+  "node/13259815656": {
+    "booking_url": "",
+    "_comment": "Mainas (chalet, Sallatunturi, km 694.3) - search: https://www.booking.com/searchresults.html?ss=Mainas&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7523249&longitude=28.7905957"
+  },
+  "way/538221553": {
+    "booking_url": "",
+    "_comment": "Supilinna (chalet, Sallatunturi, km 695.2) - search: https://www.booking.com/searchresults.html?ss=Supilinna&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7531283&longitude=28.7674555"
+  },
+  "node/1066409809": {
+    "booking_url": "",
+    "_comment": "Salla tunturintuvat (chalet, Sallatunturi, km 695.3) - search: https://www.booking.com/searchresults.html?ss=Salla+tunturintuvat&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7559249&longitude=28.7674456"
+  },
+  "node/1066409741": {
+    "booking_url": "",
+    "_comment": "Sallatunturin kelomajat (chalet, Sallatunturi, km 695.5) - search: https://www.booking.com/searchresults.html?ss=Sallatunturin+kelomajat&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7573942&longitude=28.7709842"
+  },
+  "node/1068906538": {
+    "booking_url": "",
+    "_comment": "Revontuli (hotel, Sallatunturi, km 695.6) - search: https://www.booking.com/searchresults.html?ss=Revontuli&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7590206&longitude=28.7685536"
+  },
+  "way/354855382": {
+    "booking_url": "",
+    "_comment": "Holiday Club Salla (hotel, Sallatunturi, km 695.6) - search: https://www.booking.com/searchresults.html?ss=Holiday+Club+Salla&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7587669&longitude=28.7688155"
+  },
+  "way/538218344": {
+    "booking_url": "",
+    "_comment": "Luppokero (chalet, Sallatunturi, km 698.0) - search: https://www.booking.com/searchresults.html?ss=Luppokero&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7760559&longitude=28.763424"
+  },
+  "node/1071480120": {
+    "booking_url": "",
+    "_comment": "Sallainen maja (chalet, Sallatunturi, km 698.5) - search: https://www.booking.com/searchresults.html?ss=Sallainen+maja&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=66.7924061&longitude=28.7241274"
+  },
+  "node/1843265240": {
+    "booking_url": "",
+    "_comment": "Naruskan retkeilymaja (guest_house, Naruska, km 756.9) - search: https://www.booking.com/searchresults.html?ss=Naruskan+retkeilymaja&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=67.1295597&longitude=29.1650201"
+  },
+  "node/2630856044": {
+    "booking_url": "",
+    "_comment": "Tuntsan Tunturilomat (hostel, km 797.0) - search: https://www.booking.com/searchresults.html?ss=Tuntsan+Tunturilomat&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=67.3643907&longitude=29.3567425"
+  },
+  "node/1843265451": {
+    "booking_url": "",
+    "_comment": "Lomakylä Tulppion majat (guest_house, km 873.9) - search: https://www.booking.com/searchresults.html?ss=Lomakyl%C3%A4+Tulppion+majat&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=67.7700264&longitude=29.2093779"
   }
 }
