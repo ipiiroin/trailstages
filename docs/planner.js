@@ -195,6 +195,124 @@ function findBestPartition(points, totalStages) {
   return { pathIdx, maxStage: bestMax };
 }
 
+// "Roofed where possible" in Days mode: a day may run this much longer than
+// the most balanced plan's longest day if that buys a roof for the night.
+const ROOF_STRETCH_FACTOR = 1.25;
+
+/** Lexicographically compare two equal-length cost tuples. */
+function tupleLess(a, b) {
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] < b[i] - 1e-9) return true;
+    if (a[i] > b[i] + 1e-9) return false;
+  }
+  return false;
+}
+
+/**
+ * Cheapest way along `points` from the first to the last using only steps
+ * no longer than maxStepKm. Each step costs [days, campNights, length^2],
+ * summed and compared lexicographically - all three are additive, so plain
+ * DP is exact. `stages` fixes the number of steps; null lets it float (and
+ * then fewer days wins first). useCamp: count nights at camping-only stops.
+ * allowGapHops: a step between two neighbouring points is always allowed,
+ * however long - the only way across a gap with no stop at all.
+ */
+function cheapestPath(points, isCampNight, maxStepKm, stages, useCamp, allowGapHops = false) {
+  const last = points.length - 1;
+  const stepCost = (i, j) => {
+    const len = points[j] - points[i];
+    return [1, useCamp && isCampNight[j] ? 1 : 0, len * len];
+  };
+  const add = (a, b) => a.map((x, k) => x + b[k]);
+  const tooLong = (i, j) => points[j] - points[i] > maxStepKm + 1e-6 && !(allowGapHops && j === i + 1);
+
+  // Layer k = "after k steps"; with floating stages, one layer suffices.
+  const layers = stages == null ? 1 : stages;
+  let prev = new Array(points.length).fill(null);
+  prev[0] = { cost: [0, 0, 0], path: [0] };
+  if (stages == null) {
+    for (let j = 1; j <= last; j++) {
+      for (let i = 0; i < j; i++) {
+        if (!prev[i] || tooLong(i, j)) continue;
+        const cost = add(prev[i].cost, stepCost(i, j));
+        if (!prev[j] || tupleLess(cost, prev[j].cost)) prev[j] = { cost, path: [...prev[i].path, j] };
+      }
+    }
+    return prev[last];
+  }
+  for (let k = 1; k <= layers; k++) {
+    const next = new Array(points.length).fill(null);
+    const ends = k === layers ? [last] : rangeInclusive(1, last - 1);
+    for (const j of ends) {
+      for (let i = 0; i < j; i++) {
+        if (!prev[i] || tooLong(i, j)) continue;
+        const cost = add(prev[i].cost, stepCost(i, j));
+        if (!next[j] || tupleLess(cost, next[j].cost)) next[j] = { cost, path: [...prev[i].path, j] };
+      }
+    }
+    prev = next;
+  }
+  return prev[last];
+}
+
+/** Smallest step length (from the candidates) for which ok(step) holds;
+ * ok must be monotone (false ... false true ... true). */
+function smallestStep(candidates, ok) {
+  let lo = 0;
+  let hi = candidates.length - 1;
+  if (hi < 0 || !ok(candidates[hi])) return null;
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (ok(candidates[mid])) hi = mid;
+    else lo = mid + 1;
+  }
+  return candidates[lo];
+}
+
+/**
+ * Partition for the section-mode preferences. Priorities, in order:
+ *   1. fewest days (only when `stages` is null, i.e. planning by km/day)
+ *   2. fewest nights without a roof (only when preferRoofed)
+ *   3. shortest longest day
+ *   4. most even days (least sum of squares)
+ * ...all subject to a daily cap:
+ *   - planning by distance: maxDailyKm. A gap between two neighbouring stops
+ *     longer than that is still crossed (it's unavoidable), but every other
+ *     day keeps to the cap; capRaised flags that it happened.
+ *   - planning by days with preferRoofed: ROOF_STRETCH_FACTOR x the most
+ *     balanced plan's longest day.
+ */
+function findPreferredPartition(points, isCampNight, { stages = null, preferRoofed = false, maxDailyKm = null }) {
+  const lengths = [];
+  for (let i = 0; i < points.length; i++) {
+    for (let j = i + 1; j < points.length; j++) lengths.push(points[j] - points[i]);
+  }
+  const candidates = [...new Set(lengths.map((l) => Math.round(l * 1e6) / 1e6))].sort((a, b) => a - b);
+  const byDistance = stages == null;
+  const path = (step, useCamp) => cheapestPath(points, isCampNight, step, stages, useCamp, byDistance);
+
+  let cap;
+  if (byDistance) {
+    cap = maxDailyKm ?? Infinity;
+  } else {
+    // Shortest possible longest day for this many days, ignoring roofs.
+    const bottleneck = smallestStep(candidates, (step) => path(step, false) !== null);
+    if (bottleneck === null) return null;
+    cap = preferRoofed ? bottleneck * ROOF_STRETCH_FACTOR : bottleneck;
+  }
+
+  // Priorities 1-2 at the cap, then the smallest longest day that keeps them.
+  const atCap = path(cap, preferRoofed);
+  if (!atCap) return null;
+  const keepsPriorities = (step) => {
+    const r = path(step, preferRoofed);
+    return r !== null && r.cost[0] === atCap.cost[0] && r.cost[1] === atCap.cost[1];
+  };
+  const step = smallestStep(candidates.filter((c) => c <= cap + 1e-9), keepsPriorities) ?? cap;
+  const best = path(step, preferRoofed);
+  const longest = Math.max(...best.path.slice(1).map((j, k) => points[j] - points[best.path[k]]));
+  return { pathIdx: best.path, maxStage: longest, capRaised: byDistance && longest > cap + 1e-6 };
+}
 /** accommodations.json record -> the shape the UI renders. `tier` and
  * `label` are UKK-only (null on WHW): tier picks the link rule in
  * buildAccommodationLink, label is a display name like "autiotupa". */
@@ -247,7 +365,8 @@ function sectionFinish(pool, totalKm, reverse) {
  * stdDev alongside the stages so callers can judge how balanced it is.
  * finishAtEnd (section mode): the last day ends at totalKm - see
  * sectionFinish - instead of at the last accommodation cluster. */
-function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse, finishAtEnd = false) {
+function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse, finishAtEnd = false, prefs = {}) {
+  const { preferRoofed = false, maxDailyKm = null } = prefs;
   const pool = candidatePool(clusters, includeCamping);
   if (pool.length === 0 && !finishAtEnd) {
     return { error: "No accommodation available on this trail with the current settings." };
@@ -266,7 +385,7 @@ function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, re
     intermediates = pool.slice(0, -1);
   }
   const maxFeasibleDays = intermediates.length + 1;
-  if (days > maxFeasibleDays) {
+  if (days != null && days > maxFeasibleDays) {
     return {
       error:
         `Only ${maxFeasibleDays} distinct overnight stop(s) are available with the current settings - ` +
@@ -276,10 +395,19 @@ function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, re
   }
 
   const points = [0, ...intermediates.map((c) => c.km), finishCluster.km];
-  const partition = findBestPartition(points, days);
+  // The WHW's original modes (fixed days, no roof preference) keep the
+  // original optimizer untouched; the newer modes use the lexicographic one.
+  let partition;
+  if (days != null && !preferRoofed) {
+    partition = findBestPartition(points, days);
+  } else {
+    const isCampNight = [false, ...intermediates.map((c) => !clusterHasRoofed(c)), false];
+    partition = findPreferredPartition(points, isCampNight, { stages: days, preferRoofed, maxDailyKm });
+  }
   if (!partition) {
     return { error: `Could not find a valid ${days}-day split of the available accommodation.` };
   }
+  days = partition.pathIdx.length - 1;
 
   const stages = [];
   const distances = [];
@@ -303,17 +431,20 @@ function buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, re
   const variance = distances.reduce((s, d) => s + (d - mean) ** 2, 0) / days;
   const stdDev = Math.sqrt(variance);
 
-  return { days: stages, maxStage, minStage, stdDev };
+  // Nights (every stop but the finish) spent without a roof.
+  const campNights = stages.slice(0, -1).filter((s) => s.accommodations.every((a) => !ROOFED_TYPES.has(a.type))).length;
+
+  return { days: stages, maxStage, minStage, stdDev, campNights, capRaised: Boolean(partition.capRaised) };
 }
 
 /** Among nearby day counts, find the one with the best-balanced result
  * (smallest longest stage, tie-broken by smallest stdDev) - used only to
  * populate a suggestion note, never to override the requested day count. */
-function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays, finishAtEnd) {
+function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays, finishAtEnd, prefs) {
   const candidateDays = [days - 1, days + 1, days + 2].filter((d) => d >= 1 && d <= maxFeasibleDays && d !== days);
   let best = null;
   for (const d of candidateDays) {
-    const result = buildPlanForDays(clusters, walkRoute, totalKm, d, includeCamping, reverse, finishAtEnd);
+    const result = buildPlanForDays(clusters, walkRoute, totalKm, d, includeCamping, reverse, finishAtEnd, prefs);
     if (result.error) continue;
     const better =
       !best ||
@@ -328,29 +459,45 @@ function suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCampin
  * @param {Object} input
  * @param {Array<{lat:number, lon:number, km:number, ele?:number}>} input.route
  * @param {Array<{name:string, type:string, km:number, lat:number, lon:number, off_route_m:number, website?:string}>} input.accommodations
- * @param {number} input.days
+ * @param {number} [input.days] - exact day count; or leave null and give maxDailyKm
+ * @param {number} [input.maxDailyKm] - plan by distance: fewest days with no day longer than this
  * @param {"forward"|"reverse"} [input.direction]
  * @param {boolean} [input.includeCamping] - allow camp_site-only clusters as normal overnight stops
+ * @param {"roofed"|"prefer_roofed"|"any"} [input.stops] - overrides includeCamping: roofed only, roofed
+ *   where possible (camping-only stops only where no roof is within reach), or any stop (pure balance)
  * @param {Object} [input.limits] - per-trail km/day limits; defaults are tuned for walking the WHW
  * @param {number} [input.limits.maxAvgKm] - refuse plans averaging more than this per day
  * @param {number} [input.limits.warnMaxKm] - flag (but still return) plans with a stage longer than this
  * @param {boolean} [input.finishAtEnd] - end the last day at the route end even without accommodation there (section mode)
  * @returns {{days: Array<Object>, totalKm: number, direction: string, note?: string} | {error: string}}
  */
-function planTrip({ route, accommodations, days, direction = "forward", includeCamping = false, limits = {}, finishAtEnd = false }) {
+function planTrip({
+  route, accommodations, days = null, maxDailyKm = null, direction = "forward",
+  includeCamping = false, stops = null, limits = {}, finishAtEnd = false,
+}) {
   const maxAvgKm = limits.maxAvgKm ?? MAX_AVG_STAGE_KM;
   const warnMaxKm = limits.warnMaxKm ?? STAGE_WARN_MAX_KM;
+  const stopMode = stops ?? (includeCamping ? "any" : "roofed");
+  const allowCamping = stopMode !== "roofed";
+  const byDistance = days == null;
+  const prefs = { preferRoofed: stopMode === "prefer_roofed", maxDailyKm: byDistance ? maxDailyKm : null };
   if (!route || route.length < 2) {
     return { error: "Route data is missing or too short." };
   }
-  if (!Number.isInteger(days) || days < 1) {
+  if (byDistance && !(maxDailyKm > 0)) {
+    return { error: "Give either a day count or a maximum daily distance." };
+  }
+  if (!byDistance && (!Number.isInteger(days) || days < 1)) {
     return { error: "Days must be a positive whole number." };
   }
 
   const totalKm = route[route.length - 1].km;
   const reverse = direction === "reverse";
 
-  const naiveAvg = totalKm / days;
+  const naiveAvg = byDistance ? MIN_AVG_STAGE_KM : totalKm / days;
+  if (totalKm < MIN_AVG_STAGE_KM) {
+    return { error: `At ${totalKm.toFixed(1)} km this is shorter than a single day's walk - pick a longer section.` };
+  }
   if (naiveAvg > maxAvgKm || naiveAvg < MIN_AVG_STAGE_KM) {
     const minDays = Math.ceil(totalKm / maxAvgKm);
     const maxDays = Math.floor(totalKm / MIN_AVG_STAGE_KM);
@@ -375,14 +522,23 @@ function planTrip({ route, accommodations, days, direction = "forward", includeC
     .map((c) => ({ realKm: c.km, km: reverse ? totalKm - c.km : c.km, options: c.options }))
     .sort((a, b) => a.km - b.km);
 
-  const plan = buildPlanForDays(clusters, walkRoute, totalKm, days, includeCamping, reverse, finishAtEnd);
+  const plan = buildPlanForDays(clusters, walkRoute, totalKm, days, allowCamping, reverse, finishAtEnd, prefs);
   if (plan.error) return plan;
+
+  if (byDistance) {
+    const note = distanceModeNote(plan, maxDailyKm, stopMode, () =>
+      buildPlanForDays(clusters, walkRoute, totalKm, null, false, reverse, finishAtEnd, { maxDailyKm })
+    );
+    return {
+      days: plan.days, totalKm: round2(totalKm), direction, campNights: plan.campNights, ...(note ? { note } : {}),
+    };
+  }
 
   const outOfRange = plan.maxStage > warnMaxKm + 1e-9 || plan.minStage < STAGE_WARN_MIN_KM - 1e-9;
   let note;
   if (outOfRange) {
-    const maxFeasibleDays = candidatePool(clusters, includeCamping).length;
-    const suggestion = suggestBetterDayCount(clusters, walkRoute, totalKm, days, includeCamping, reverse, maxFeasibleDays, finishAtEnd);
+    const maxFeasibleDays = candidatePool(clusters, allowCamping).length;
+    const suggestion = suggestBetterDayCount(clusters, walkRoute, totalKm, days, allowCamping, reverse, maxFeasibleDays, finishAtEnd, prefs);
     const stageDesc =
       plan.maxStage > warnMaxKm ? `a ${plan.maxStage.toFixed(1)} km stage` : `a ${plan.minStage.toFixed(1)} km stage`;
     note = suggestion
@@ -390,7 +546,35 @@ function planTrip({ route, accommodations, days, direction = "forward", includeC
       : `This plan still has ${stageDesc} given how accommodation is spaced along the trail.`;
   }
 
-  return { days: plan.days, totalKm: round2(totalKm), direction, ...(note ? { note } : {}) };
+  if (stopMode === "prefer_roofed" && plan.campNights > 0) {
+    note = [campNightsNote(plan.campNights), note].filter(Boolean).join(" ");
+  }
+  const extra = stops ? { campNights: plan.campNights } : {};
+  return { days: plan.days, totalKm: round2(totalKm), direction, ...extra, ...(note ? { note } : {}) };
+}
+
+function campNightsNote(n) {
+  return `${n} night${n === 1 ? " is" : "s are"} at a campsite or open shelter, where no roofed stop was within reach.`;
+}
+
+/** Notes for a plan made by maximum daily distance: days forced over the
+ * limit by a gap with no stop, roofless nights, and - when a roof every
+ * night is possible within the same limit - how many days that would take. */
+function distanceModeNote(plan, maxDailyKm, stopMode, planRoofedOnly) {
+  const parts = [];
+  const tooLong = plan.days.filter((d) => d.distanceKm > maxDailyKm + 0.05);
+  if (tooLong.length > 0) {
+    const list = tooLong.map((d) => `day ${d.day} (${d.distanceKm.toFixed(1)} km)`).join(", ");
+    parts.push(`There is no stop close enough to keep every day under ${maxDailyKm} km: ${list}.`);
+  }
+  if (stopMode !== "roofed" && plan.campNights > 0) {
+    if (stopMode === "prefer_roofed") parts.push(campNightsNote(plan.campNights));
+    const roofed = planRoofedOnly();
+    if (!roofed.error && !roofed.capRaised && roofed.days.length !== plan.days.length) {
+      parts.push(`A roof every night within ${maxDailyKm} km/day would take ${roofed.days.length} days.`);
+    }
+  }
+  return parts.join(" ");
 }
 
 /** Route vertex at an exact km, linearly interpolated between neighbours.
@@ -432,7 +616,9 @@ function sliceRoute(route, loKm, hiKm) {
  *
  * @returns same shape as planTrip, plus sectionFromKm / sectionToKm
  */
-function planSection({ route, accommodations, fromKm, toKm, days, includeCamping = false, limits = {} }) {
+function planSection({
+  route, accommodations, fromKm, toKm, days = null, maxDailyKm = null, includeCamping = false, stops = null, limits = {},
+}) {
   if (!route || route.length < 2) {
     return { error: "Route data is missing or too short." };
   }
@@ -456,8 +642,10 @@ function planSection({ route, accommodations, fromKm, toKm, days, includeCamping
     route: sectionRoute,
     accommodations: sectionAccommodations,
     days,
+    maxDailyKm,
     direction: fromKm > toKm ? "reverse" : "forward",
     includeCamping,
+    stops,
     limits,
     finishAtEnd: true,
   });
@@ -707,6 +895,33 @@ function selfTest() {
   const rentalHut = buildAccommodationLink({ name: "Rental", tier: "own_site", website: "https://example.fi" }, {}, "2026-08-01", "2026-08-02");
   check("a rental hut links to its own site", rentalHut && rentalHut.linkType === "website");
   check("a rental hut with no site gets no Booking.com search", buildAccommodationLink({ name: "Rental", tier: "own_site" }, {}, "2026-08-01", "2026-08-02") === null);
+
+  // Stop preference: "roofed where possible" takes a hotel over an equally
+  // handy laavu; "any" just balances distances and takes the laavu.
+  const sixty = [];
+  for (let km = 0; km <= 60; km += 1) sixty.push({ lat: 64 + km * 0.001, lon: 28, km });
+  const hotelOrLaavu = [
+    { name: "Side Hotel", type: "hotel", km: 27, lat: 64.027, lon: 28, off_route_m: 0 },
+    { name: "Mid Laavu", type: "shelter", tier: "free_hut", km: 30, lat: 64.03, lon: 28, off_route_m: 0 },
+    { name: "End Hotel", type: "hotel", km: 60, lat: 64.06, lon: 28, off_route_m: 0 },
+  ];
+  const stopAt = (plan) => plan.days && plan.days[0].accommodations.map((a) => a.name).join();
+  check("'any' balances onto the laavu", stopAt(planTrip({ route: sixty, accommodations: hotelOrLaavu, days: 2, stops: "any" })) === "Mid Laavu");
+  const prefer = planTrip({ route: sixty, accommodations: hotelOrLaavu, days: 2, stops: "prefer_roofed" });
+  check("'prefer_roofed' takes the hotel a little off-balance", stopAt(prefer) === "Side Hotel" && prefer.campNights === 0);
+
+  // Plan by distance: the fewest days that keep every day under the limit.
+  const everyTwenty = [20, 40, 60].map((km) => ({ name: `Hotel ${km}`, type: "hotel", km, lat: 64 + km * 0.001, lon: 28, off_route_m: 0 }));
+  const by25 = planTrip({ route: sixty, accommodations: everyTwenty, maxDailyKm: 25, stops: "roofed" });
+  check("max 25 km/day over 60 km with hotels every 20 km -> 3 days", by25.days && by25.days.length === 3 && !by25.note);
+  const by45 = planTrip({ route: sixty, accommodations: everyTwenty, maxDailyKm: 45, stops: "roofed" });
+  check("max 45 km/day -> 2 days", by45.days && by45.days.length === 2);
+  const gappy = [10, 50, 60].map((km) => ({ name: `Hotel ${km}`, type: "hotel", km, lat: 64 + km * 0.001, lon: 28, off_route_m: 0 }));
+  const byGap = planTrip({ route: sixty, accommodations: gappy, maxDailyKm: 20, stops: "roofed" });
+  check(
+    "a gap longer than the limit is crossed in one day, other days keep to it, and the note says so",
+    byGap.days && byGap.days.map((d) => d.distanceKm).join() === "10,40,10" && byGap.note.includes("day 2 (40.0 km)")
+  );
 
   // Section mode: only clusters inside [from, to] are used, and every km in
   // the result is real trail km (not rebased to the section start).

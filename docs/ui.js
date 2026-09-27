@@ -15,6 +15,10 @@ const DEFAULT_TRAIL_ID = "whw";
 
 const TOWN_LABEL_TOLERANCE_KM = 6;
 const MAX_VISIBLE_ACCOMMODATIONS = 10;
+// Stops further than this from the line show their detour. 1.5 km is the
+// normal search corridor (WHW, and UKK laavus); only UKK's wider search for
+// roofed places (up to 5 km) goes beyond it. Stage km are along the trail.
+const OFF_TRAIL_NOTE_M = 1500;
 
 // Section mode: default day count is the section length at this daily
 // distance (the middle of the trail's km/day range would overshoot on
@@ -106,11 +110,20 @@ function renderAccommodationLi(stage, acc, startDate, bookingUrls) {
   const href = link ? safeHref(link.url) : null;
   li.innerHTML =
     `<span class="acc-name-block"><span class="acc-name">${escapeHtml(acc.name)}</span>` +
-    `<span class="acc-type">${escapeHtml(accommodationTypeLabel(acc))}</span></span>` +
+    `<span class="acc-type">${escapeHtml(accommodationTypeLabel(acc))}${offTrailSuffix(acc)}</span></span>` +
     (href
       ? `<a href="${href}" class="acc-link acc-link-${link.linkType}" target="_blank" rel="noopener">${LINK_LABELS[link.linkType]}</a>`
       : "");
   return li;
+}
+
+/** When even the closest overnight option is well off the trail, show the
+ * extra walk next to the day's distance (which is measured along the trail). */
+function offTrailStat(stage) {
+  if (stage.accommodations.length === 0) return "";
+  const nearestM = Math.min(...stage.accommodations.map((a) => a.offRouteM || 0));
+  if (nearestM <= OFF_TRAIL_NOTE_M) return "";
+  return `<span class="stage-stat stat-detour">+${(nearestM / 1000).toFixed(1)}<span class="stage-stat-unit">km off trail to the stop</span></span>`;
 }
 
 function renderItineraryPanel(itinerary, startDate, bookingUrls) {
@@ -181,6 +194,7 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
     stats.className = "stage-stats";
     stats.innerHTML =
       `<span class="stage-stat stat-distance">${ICON_DISTANCE}${stage.distanceKm}<span class="stage-stat-unit">km</span></span>` +
+      offTrailStat(stage) +
       (stage.ascentM != null
         ? `<span class="stage-stat stat-ascent">${ICON_ASCENT}${stage.ascentM}<span class="stage-stat-unit">m ascent</span></span>`
         : "");
@@ -242,6 +256,11 @@ function renderItineraryPanel(itinerary, startDate, bookingUrls) {
     li.appendChild(card);
     panel.appendChild(li);
   }
+}
+
+/** " · 3.6 km off trail" for stops far enough off the line to matter. */
+function offTrailSuffix(acc) {
+  return acc.offRouteM > OFF_TRAIL_NOTE_M ? ` · ${(acc.offRouteM / 1000).toFixed(1)} km off trail` : "";
 }
 
 /** "autiotupa" / "laavu" for UKK huts, else the OSM type made readable. */
@@ -440,21 +459,38 @@ async function main() {
   const routeProfileScaleEl = document.getElementById("route-profile-scale");
 
   const daysSlider = document.getElementById("days-slider");
-  const daysValue = document.getElementById("days-value");
   const directionSelect = document.getElementById("direction-select");
   const fromSelect = document.getElementById("from-select");
   const toSelect = document.getElementById("to-select");
   const sectionHint = document.getElementById("section-hint");
   const startDateInput = document.getElementById("start-date");
   const includeCampingCheckbox = document.getElementById("include-camping");
+  const stopsSelect = document.getElementById("stops-select");
+  const daysLabel = document.getElementById("days-label");
+  const planByRadios = Array.from(document.querySelectorAll('input[name="plan-by"]'));
 
   document.getElementById("direction-control").hidden = sectionMode;
   document.getElementById("section-control").hidden = !sectionMode;
+  // Plan-by-distance is offered on section-mode trails only (WHW unchanged).
+  document.getElementById("plan-by").hidden = !sectionMode;
+  // A trail that sets default_stops gets the three-way stop choice.
+  const stopChoice = Boolean(trail.default_stops);
+  document.getElementById("stops-control").hidden = !stopChoice;
+  document.getElementById("camping-control").hidden = stopChoice;
+  if (stopChoice) stopsSelect.value = trail.default_stops;
 
   startDateInput.value = defaultStartDate();
-  includeCampingCheckbox.checked = Boolean(trail.default_include_camping);
-  if (trail.camping_label) {
-    document.getElementById("include-camping-label").textContent = trail.camping_label;
+
+  // The one slider means days or max km/day; remember each separately.
+  let planByDistance = false;
+  let kmPerDay = SECTION_DEFAULT_KM_PER_DAY;
+
+  function configureSlider() {
+    if (planByDistance) {
+      daysSlider.min = String(trail.min_km_per_day);
+      daysSlider.max = String(trail.max_km_per_day);
+      daysSlider.value = String(clamp(kmPerDay, trail.min_km_per_day, trail.max_km_per_day));
+    }
   }
 
   function selectedSection() {
@@ -466,10 +502,12 @@ async function main() {
   function onSectionChange() {
     const { from, to } = selectedSection();
     const spanKm = Math.abs(to.km - from.km);
-    const bounds = sectionDayBounds(spanKm, trail);
-    daysSlider.min = String(bounds.min);
-    daysSlider.max = String(bounds.max);
-    daysSlider.value = String(clamp(Math.round(spanKm / SECTION_DEFAULT_KM_PER_DAY), bounds.min, bounds.max));
+    if (!planByDistance) {
+      const bounds = sectionDayBounds(spanKm, trail);
+      daysSlider.min = String(bounds.min);
+      daysSlider.max = String(bounds.max);
+      daysSlider.value = String(clamp(Math.round(spanKm / SECTION_DEFAULT_KM_PER_DAY), bounds.min, bounds.max));
+    }
 
     const hint = offRouteHint([from, to]);
     sectionHint.textContent = hint || "";
@@ -497,7 +535,9 @@ async function main() {
     daysSlider.value = String(clamp(Number(daysSlider.value), trail.min_days, trail.max_days));
   }
 
-  function planCurrent(days, includeCamping) {
+  // days or maxDailyKm is null depending on the plan-by mode; stops is null
+  // on trails that use the plain campsite checkbox.
+  function planCurrent({ days, maxDailyKm, includeCamping, stops }) {
     if (!sectionMode) {
       return Planner.planTrip({ route, accommodations, days, direction: directionSelect.value, includeCamping });
     }
@@ -512,7 +552,9 @@ async function main() {
     }
     // The trail's own km/day ceiling replaces the WHW-tuned walking limits.
     const limits = { maxAvgKm: trail.max_km_per_day, warnMaxKm: trail.max_km_per_day };
-    const plan = Planner.planSection({ route, accommodations, fromKm: from.km, toKm: to.km, days, includeCamping, limits });
+    const plan = Planner.planSection({
+      route, accommodations, fromKm: from.km, toKm: to.km, days, maxDailyKm, includeCamping, stops, limits,
+    });
     if (!plan.error) {
       plan.startLabel = from.name;
       plan.endLabel = to.name;
@@ -527,12 +569,23 @@ async function main() {
   }
 
   function update() {
-    const days = Number(daysSlider.value);
-    daysValue.textContent = String(days);
+    const sliderValue = Number(daysSlider.value);
     const startDate = startDateInput.value || null;
-    const includeCamping = includeCampingCheckbox.checked;
+    if (planByDistance) kmPerDay = sliderValue;
 
-    const itinerary = planCurrent(days, includeCamping);
+    const itinerary = planCurrent({
+      days: planByDistance ? null : sliderValue,
+      maxDailyKm: planByDistance ? sliderValue : null,
+      includeCamping: includeCampingCheckbox.checked,
+      stops: stopChoice ? stopsSelect.value : null,
+    });
+
+    if (planByDistance) {
+      const dayCount = itinerary.days ? ` · ${itinerary.days.length} days` : "";
+      daysLabel.innerHTML = `Max <strong id="days-value">${sliderValue}</strong> km/day${dayCount}`;
+    } else {
+      daysLabel.innerHTML = `Days <strong id="days-value">${sliderValue}</strong>`;
+    }
 
     let loKm = 0;
     let hiKm = trail.total_km;
@@ -558,6 +611,14 @@ async function main() {
   toSelect.addEventListener("change", onSectionChange);
   startDateInput.addEventListener("change", update);
   includeCampingCheckbox.addEventListener("change", update);
+  stopsSelect.addEventListener("change", update);
+  planByRadios.forEach((radio) =>
+    radio.addEventListener("change", () => {
+      planByDistance = radio.value === "distance" && radio.checked;
+      configureSlider();
+      onSectionChange();
+    })
+  );
 
   if (sectionMode) {
     onSectionChange();

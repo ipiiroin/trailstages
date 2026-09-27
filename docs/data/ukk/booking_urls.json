@@ -7,6 +7,10 @@
     "booking_url": "",
     "_comment": "Sokos Hotel Koli (hotel, Koli, km 0.0) - search: https://www.booking.com/searchresults.html?ss=Sokos+Hotel+Koli&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0962549&longitude=29.8059531"
   },
+  "way/627391750": {
+    "booking_url": "",
+    "_comment": "Jero vuokratupa (chalet, Koli, km 0.0) - search: https://www.booking.com/searchresults.html?ss=Jero+vuokratupa&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0696599&longitude=29.8215731"
+  },
   "way/167079816": {
     "booking_url": "",
     "_comment": "Break Sokos Hotel Koli (hotel, Koli, km 0.1) - search: https://www.booking.com/searchresults.html?ss=Break+Sokos+Hotel+Koli&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.0967079&longitude=29.805247"
@@ -27,6 +31,10 @@
     "booking_url": "",
     "_comment": "Patikoijan Pirtti (apartment, Koli, km 3.2) - search: https://www.booking.com/searchresults.html?ss=Patikoijan+Pirtti&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1135398&longitude=29.7783138"
   },
+  "way/803739066": {
+    "booking_url": "",
+    "_comment": "Vanhan koulun majatalo (guest_house, Koli, km 5.4) - search: https://www.booking.com/searchresults.html?ss=Vanhan+koulun+majatalo&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.1529545&longitude=29.7757549"
+  },
   "node/1395211217": {
     "booking_url": "",
     "_comment": "Linta mökit (chalet, km 8.4) - search: https://www.booking.com/searchresults.html?ss=Linta+m%C3%B6kit&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.101835&longitude=29.6928701"
@@ -42,6 +50,18 @@
   "way/705175836": {
     "booking_url": "",
     "_comment": "Aronsalmen Lomamökit (chalet, km 87.6) - search: https://www.booking.com/searchresults.html?ss=Aronsalmen+Lomam%C3%B6kit&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.4761361&longitude=29.0341984"
+  },
+  "node/8498247187": {
+    "booking_url": "",
+    "_comment": "Männikölän Pirtti (guest_house, km 90.6) - search: https://www.booking.com/searchresults.html?ss=M%C3%A4nnik%C3%B6l%C3%A4n+Pirtti&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.5097559&longitude=29.1249382"
+  },
+  "node/4323395955": {
+    "booking_url": "",
+    "_comment": "Laitalan Lomat (guest_house, km 108.2) - search: https://www.booking.com/searchresults.html?ss=Laitalan+Lomat&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.6143124&longitude=28.8618309"
+  },
+  "node/2729298351": {
+    "booking_url": "",
+    "_comment": "Majatalo Puukarin Pysäkki (guest_house, km 133.7) - search: https://www.booking.com/searchresults.html?ss=Majatalo+Puukarin+Pys%C3%A4kki&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=63.7338617&longitude=28.7030055"
   },
   "node/2199153508": {
     "booking_url": "",
@@ -62,6 +82,10 @@
   "node/254653882": {
     "booking_url": "",
     "_comment": "Break Sokos Hotel Vuokatti (hotel, Vuokatti, km 202.5) - search: https://www.booking.com/searchresults.html?ss=Break+Sokos+Hotel+Vuokatti&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1409366&longitude=28.2946149"
+  },
+  "node/7781736796": {
+    "booking_url": "",
+    "_comment": "Haapala B & B (guest_house, Vuokatti, km 202.5) - search: https://www.booking.com/searchresults.html?ss=Haapala+B+%26+B&checkin=2026-08-01&checkout=2026-08-02&dest_type=latlong&latitude=64.1306202&longitude=28.3103941"
   },
   "way/367140227": {
     "booking_url": "",

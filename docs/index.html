@@ -22,7 +22,13 @@
 
 <form class="controls" id="controls">
   <div class="control">
-    <label for="days-slider">Days <strong id="days-value">6</strong></label>
+    <!-- Section-mode trails can also plan by distance: the slider becomes a
+         max km/day and the day count follows from it. -->
+    <div class="plan-by" id="plan-by" role="radiogroup" aria-label="Plan by" hidden>
+      <label><input type="radio" name="plan-by" value="days" checked /> Days</label>
+      <label><input type="radio" name="plan-by" value="distance" /> Max km per day</label>
+    </div>
+    <label for="days-slider" id="days-label">Days <strong id="days-value">6</strong></label>
     <input type="range" id="days-slider" min="3" max="11" value="6" step="1" />
   </div>
 
@@ -56,10 +62,21 @@
     <input type="date" id="start-date" />
   </div>
 
-  <label class="control control-checkbox" for="include-camping">
+  <label class="control control-checkbox" id="camping-control" for="include-camping">
     <input type="checkbox" id="include-camping" />
-    <span id="include-camping-label">Include campsites (carrying a tent)</span>
+    <span>Include campsites (carrying a tent)</span>
   </label>
+
+  <!-- Trails with huts and open shelters (UKK) get a three-way choice
+       instead of the campsite checkbox. -->
+  <div class="control" id="stops-control" hidden>
+    <label for="stops-select">Overnight stops</label>
+    <select id="stops-select">
+      <option value="prefer_roofed">Roofed where possible, laavu/campsite when needed</option>
+      <option value="roofed">Roofed only</option>
+      <option value="any">Any stop, most even days</option>
+    </select>
+  </div>
 </form>
 
 <div class="view-tabs" role="tablist">

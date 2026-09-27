@@ -202,6 +202,27 @@ summary:focus-visible {
   display: none;
 }
 
+.plan-by[hidden] {
+  display: none;
+}
+
+.plan-by {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 0.9rem;
+}
+
+.plan-by label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 400;
+}
+
+.plan-by input {
+  accent-color: var(--moss);
+}
+
 .section-pickers {
   display: grid;
   grid-template-columns: 1fr 1fr;

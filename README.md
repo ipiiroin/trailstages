@@ -28,11 +28,13 @@ trail just needs a second `data/<trail>/` directory of pre-baked JSON.
 
 [trailstages.com/?trail=ukk](https://trailstages.com/?trail=ukk) loads a
 second trail as an engineering exercise: Finland's UKK-reitti, Koli →
-Tulppio (~886 km). Instead of fixed endpoints you pick a section (From / To)
-and then days. Overnight stops are mapped only for the southern section
-(Koli → Vuokatti, km 0–210) so far, and include free wilderness huts and
-lean-to shelters (laavu) alongside hotels. There is no elevation data for
-this trail. Expect rough edges.
+Tulppio (~886 km). Instead of fixed endpoints you pick a section (From / To),
+then plan either by days or by a maximum km per day. Overnight stops are
+mapped only for the southern section (Koli → Vuokatti, km 0–210) so far,
+and include free wilderness huts and lean-to shelters (laavu) alongside
+hotels; by default the planner uses a roof wherever one is within reach and
+a laavu only where none is. There is no elevation data for this trail.
+Expect rough edges.
 
 ## Running the web app locally
 
