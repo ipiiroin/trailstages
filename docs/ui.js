@@ -10,7 +10,12 @@
  */
 
 const DATA_ROOT = "data";
-const TRAIL_IDS = ["whw", "ukk"];
+// Trails offered in the header switcher; `id` is the data/<id>/ directory.
+const TRAILS = [
+  { id: "whw", name: "West Highland Way" },
+  { id: "ukk", name: "UKK-reitti", tag: "experimental" },
+];
+const TRAIL_IDS = TRAILS.map((t) => t.id);
 const DEFAULT_TRAIL_ID = "whw";
 
 const TOWN_LABEL_TOLERANCE_KM = 6;
@@ -28,6 +33,26 @@ const SECTION_DEFAULT_KM_PER_DAY = 20;
 function selectedTrailId() {
   const id = new URLSearchParams(window.location.search).get("trail");
   return TRAIL_IDS.includes(id) ? id : DEFAULT_TRAIL_ID;
+}
+
+/** Header links between trails: plain links (?trail=<id>), so each trail
+ * has a shareable URL and switching is a normal page load. */
+function renderTrailSwitch(currentId) {
+  const nav = document.getElementById("trail-switch");
+  nav.innerHTML = "";
+  for (const trail of TRAILS) {
+    const link = document.createElement("a");
+    link.href = trail.id === DEFAULT_TRAIL_ID ? window.location.pathname : `?trail=${trail.id}`;
+    link.textContent = trail.name;
+    if (trail.tag) {
+      const tag = document.createElement("span");
+      tag.className = "trail-switch-tag";
+      tag.textContent = trail.tag;
+      link.append(" ", tag);
+    }
+    if (trail.id === currentId) link.setAttribute("aria-current", "page");
+    nav.appendChild(link);
+  }
 }
 
 // Filled from trail.json on load. Must cover every km the engine can
@@ -432,6 +457,7 @@ function offRouteHint(places) {
 
 async function main() {
   const trailId = selectedTrailId();
+  renderTrailSwitch(trailId);
   const base = `${DATA_ROOT}/${trailId}`;
   const [route, accommodations, trail, bookingUrls] = await Promise.all([
     fetchJson(`${base}/route.json`),

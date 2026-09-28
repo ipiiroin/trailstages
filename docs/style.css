@@ -126,6 +126,47 @@ summary:focus-visible {
   letter-spacing: -0.01em;
 }
 
+/* Trail switcher above the title: small map-key style tabs. */
+.trail-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: 0.85rem;
+}
+
+.trail-switch a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  min-height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.trail-switch a:hover {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+.trail-switch a[aria-current="page"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.trail-switch-tag {
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.8;
+}
+
 .subtitle {
   font-family: var(--font-body);
   font-style: italic;

@@ -26,7 +26,8 @@ trail just needs a second `data/<trail>/` directory of pre-baked JSON.
 
 ## Experimental: UKK-reitti
 
-[trailstages.com/?trail=ukk](https://trailstages.com/?trail=ukk) loads a
+Switch trails from the header, or go straight to
+[trailstages.com/?trail=ukk](https://trailstages.com/?trail=ukk), for a
 second trail as an engineering exercise: Finland's UKK-reitti, Koli →
 Tulppio (~886 km). Instead of fixed endpoints you pick a section (From / To),
 then plan either by days or by a maximum km per day. Overnight stops are
